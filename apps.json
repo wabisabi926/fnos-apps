@@ -1,11 +1,32 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-06T09:14:34Z",
+  "generated_at": "2026-05-06T17:11:37Z",
   "source": {
     "name": "conversun/fnos-apps",
     "url": "https://github.com/conversun/fnos-apps"
   },
   "apps": [
+    {
+      "slug": "1panel",
+      "appname": "1panel",
+      "file_prefix": "1panel",
+      "display_name": "1Panel",
+      "description": "开源服务器运维管理面板，提供可视化的 Linux 服务器管理。",
+      "version": "1.10.34-lts",
+      "fpk_version": "1.10.34-lts",
+      "release_tag": "1panel/v1.10.34-lts",
+      "service_port": 10086,
+      "homepage_url": "https://1panel.cn",
+      "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/1panel/fnos/ICON_256.PNG",
+      "platforms": [
+        "x86",
+        "arm"
+      ],
+      "updated_at": "2026-05-06T17:11:27Z",
+      "download_count": 0,
+      "app_type": "native",
+      "category": "system"
+    },
     {
       "slug": "actual-budget",
       "appname": "actual-budget",
@@ -276,7 +297,7 @@
         "arm"
       ],
       "updated_at": "2026-04-12T08:13:27Z",
-      "download_count": 427,
+      "download_count": 428,
       "app_type": "docker",
       "category": "browser"
     },
@@ -540,8 +561,8 @@
       "display_name": "EZBookkeeping",
       "description": "轻量级个人记账应用，支持多币种、多账户和预算管理",
       "version": "1.4.0",
-      "fpk_version": "1.4.0-r1",
-      "release_tag": "ezbookkeeping/v1.4.0-r1",
+      "fpk_version": "1.4.0",
+      "release_tag": "ezbookkeeping/v1.4.0",
       "service_port": 8580,
       "homepage_url": "https://github.com/mayswind/ezbookkeeping",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/ezbookkeeping/fnos/ICON_256.PNG",
@@ -549,7 +570,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-03-26T16:24:45Z",
+      "updated_at": "2026-05-06T17:11:12Z",
       "download_count": 27,
       "app_type": "native",
       "category": "system"
@@ -739,7 +760,7 @@
         "arm"
       ],
       "updated_at": "2026-04-18T08:11:12Z",
-      "download_count": 128,
+      "download_count": 129,
       "app_type": "native",
       "category": "download"
     },
@@ -886,7 +907,7 @@
         "arm"
       ],
       "updated_at": "2026-04-14T08:29:38Z",
-      "download_count": 264,
+      "download_count": 268,
       "app_type": "docker",
       "category": "media"
     },
@@ -949,7 +970,7 @@
         "arm"
       ],
       "updated_at": "2026-04-06T08:28:05Z",
-      "download_count": 572,
+      "download_count": 584,
       "app_type": "native",
       "category": "media"
     },
@@ -1096,7 +1117,7 @@
         "arm"
       ],
       "updated_at": "2026-04-19T08:16:31Z",
-      "download_count": 86,
+      "download_count": 87,
       "app_type": "docker",
       "category": "media"
     },
@@ -1445,9 +1466,9 @@
       "file_prefix": "nanobot",
       "display_name": "Nanobot",
       "description": "超轻量 AI 智能体框架，99% 更少代码量，支持多模型多通道，Web 管理面板，默认密码 admin/nanobot",
-      "version": "0.1.4.post6",
-      "fpk_version": "0.1.4.post6",
-      "release_tag": "nanobot/v0.1.4.post6",
+      "version": "0.1.5.post3",
+      "fpk_version": "0.1.5.post3",
+      "release_tag": "nanobot/v0.1.5.post3",
       "service_port": 18780,
       "homepage_url": "https://github.com/HKUDS/nanobot",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/nanobot/fnos/ICON_256.PNG",
@@ -1455,8 +1476,8 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-03-28T08:08:12Z",
-      "download_count": 426,
+      "updated_at": "2026-05-06T17:11:17Z",
+      "download_count": 430,
       "app_type": "docker",
       "category": "ai"
     },
@@ -1709,7 +1730,7 @@
         "arm"
       ],
       "updated_at": "2026-04-21T08:31:26Z",
-      "download_count": 18,
+      "download_count": 20,
       "app_type": "docker",
       "category": "media"
     },
@@ -1845,9 +1866,9 @@
       "file_prefix": "picoclaw",
       "display_name": "PicoClaw",
       "description": "超轻量 AI 智能体框架，Go 编写，10MB 内存占用，支持多模型多通道智能自动化",
-      "version": "0.2.5",
-      "fpk_version": "0.2.5",
-      "release_tag": "picoclaw/v0.2.5",
+      "version": "0.2.8",
+      "fpk_version": "0.2.8",
+      "release_tag": "picoclaw/v0.2.8",
       "service_port": 18790,
       "homepage_url": "https://github.com/sipeed/picoclaw",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/picoclaw/fnos/ICON_256.PNG",
@@ -1855,7 +1876,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-04-03T08:13:30Z",
+      "updated_at": "2026-05-06T17:11:10Z",
       "download_count": 275,
       "app_type": "native",
       "category": "ai"
@@ -1877,7 +1898,7 @@
         "arm"
       ],
       "updated_at": "2026-04-25T08:15:48Z",
-      "download_count": 91,
+      "download_count": 92,
       "app_type": "docker",
       "category": "network"
     },
@@ -2003,7 +2024,7 @@
         "arm"
       ],
       "updated_at": "2026-03-26T16:24:36Z",
-      "download_count": 278,
+      "download_count": 279,
       "app_type": "native",
       "category": "automation"
     },
@@ -2276,7 +2297,7 @@
         "arm"
       ],
       "updated_at": "2026-04-10T08:27:06Z",
-      "download_count": 59,
+      "download_count": 74,
       "app_type": "native",
       "category": "download"
     },
@@ -2339,7 +2360,7 @@
         "arm"
       ],
       "updated_at": "2026-04-16T08:29:15Z",
-      "download_count": 134,
+      "download_count": 135,
       "app_type": "docker",
       "category": "media"
     },
@@ -2402,7 +2423,7 @@
         "arm"
       ],
       "updated_at": "2026-05-04T08:46:13Z",
-      "download_count": 61,
+      "download_count": 64,
       "app_type": "docker",
       "category": "system"
     },
