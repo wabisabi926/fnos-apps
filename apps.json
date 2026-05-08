@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-07T08:52:00Z",
+  "generated_at": "2026-05-08T08:28:28Z",
   "source": {
     "name": "conversun/fnos-apps",
     "url": "https://github.com/conversun/fnos-apps"
@@ -23,7 +23,7 @@
         "arm"
       ],
       "updated_at": "2026-05-06T17:11:27Z",
-      "download_count": 10,
+      "download_count": 26,
       "app_type": "native",
       "category": "system"
     },
@@ -44,7 +44,7 @@
         "arm"
       ],
       "updated_at": "2026-05-04T08:46:03Z",
-      "download_count": 68,
+      "download_count": 69,
       "app_type": "docker",
       "category": "system"
     },
@@ -86,7 +86,7 @@
         "arm"
       ],
       "updated_at": "2026-04-20T08:40:02Z",
-      "download_count": 130,
+      "download_count": 132,
       "app_type": "native",
       "category": "download"
     },
@@ -96,9 +96,9 @@
       "file_prefix": "ani-rss",
       "display_name": "ANI-RSS",
       "description": "动漫 RSS 自动追番、订阅、下载和刮削工具，支持自动识别季数集数和重命名。默认用户名admin，密码admin。",
-      "version": "3.1.21",
-      "fpk_version": "3.1.21",
-      "release_tag": "ani-rss/v3.1.21",
+      "version": "3.1.22",
+      "fpk_version": "3.1.22",
+      "release_tag": "ani-rss/v3.1.22",
       "service_port": 7789,
       "homepage_url": "https://github.com/wushuo894/ani-rss",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/ani-rss/fnos/ICON_256.PNG",
@@ -106,7 +106,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-07T08:50:44Z",
+      "updated_at": "2026-05-08T08:28:08Z",
       "download_count": 102,
       "app_type": "docker",
       "category": "content"
@@ -171,7 +171,7 @@
         "arm"
       ],
       "updated_at": "2026-04-20T08:39:56Z",
-      "download_count": 39,
+      "download_count": 42,
       "app_type": "docker",
       "category": "automation"
     },
@@ -192,7 +192,7 @@
         "arm"
       ],
       "updated_at": "2026-04-12T08:13:27Z",
-      "download_count": 27,
+      "download_count": 29,
       "app_type": "docker",
       "category": "automation"
     },
@@ -297,7 +297,7 @@
         "arm"
       ],
       "updated_at": "2026-04-12T08:13:27Z",
-      "download_count": 435,
+      "download_count": 438,
       "app_type": "docker",
       "category": "browser"
     },
@@ -402,7 +402,7 @@
         "arm"
       ],
       "updated_at": "2026-04-25T08:15:41Z",
-      "download_count": 36,
+      "download_count": 37,
       "app_type": "docker",
       "category": "download"
     },
@@ -676,7 +676,7 @@
         "arm"
       ],
       "updated_at": "2026-04-14T08:29:36Z",
-      "download_count": 11,
+      "download_count": 13,
       "app_type": "docker",
       "category": "content"
     },
@@ -760,7 +760,7 @@
         "arm"
       ],
       "updated_at": "2026-04-18T08:11:12Z",
-      "download_count": 130,
+      "download_count": 135,
       "app_type": "native",
       "category": "download"
     },
@@ -823,7 +823,7 @@
         "arm"
       ],
       "updated_at": "2026-04-18T08:11:11Z",
-      "download_count": 40,
+      "download_count": 42,
       "app_type": "native",
       "category": "network"
     },
@@ -907,7 +907,7 @@
         "arm"
       ],
       "updated_at": "2026-04-14T08:29:38Z",
-      "download_count": 275,
+      "download_count": 284,
       "app_type": "docker",
       "category": "media"
     },
@@ -970,7 +970,7 @@
         "arm"
       ],
       "updated_at": "2026-04-06T08:28:05Z",
-      "download_count": 585,
+      "download_count": 602,
       "app_type": "native",
       "category": "media"
     },
@@ -1033,7 +1033,7 @@
         "arm"
       ],
       "updated_at": "2026-05-01T08:35:21Z",
-      "download_count": 72,
+      "download_count": 78,
       "app_type": "docker",
       "category": "media"
     },
@@ -1117,7 +1117,7 @@
         "arm"
       ],
       "updated_at": "2026-04-19T08:16:31Z",
-      "download_count": 89,
+      "download_count": 90,
       "app_type": "docker",
       "category": "media"
     },
@@ -1181,7 +1181,7 @@
         "arm"
       ],
       "updated_at": "2026-04-23T08:31:27Z",
-      "download_count": 15,
+      "download_count": 17,
       "app_type": "docker",
       "category": "content"
     },
@@ -1202,7 +1202,7 @@
         "arm"
       ],
       "updated_at": "2026-04-07T08:21:40Z",
-      "download_count": 88,
+      "download_count": 89,
       "app_type": "docker",
       "category": "ai"
     },
@@ -1287,7 +1287,7 @@
         "arm"
       ],
       "updated_at": "2026-05-07T08:50:54Z",
-      "download_count": 46,
+      "download_count": 48,
       "app_type": "docker",
       "category": "ai"
     },
@@ -1350,7 +1350,7 @@
         "arm"
       ],
       "updated_at": "2026-04-08T08:21:17Z",
-      "download_count": 460,
+      "download_count": 473,
       "app_type": "docker",
       "category": "media"
     },
@@ -1392,7 +1392,7 @@
         "arm"
       ],
       "updated_at": "2026-04-05T08:08:08Z",
-      "download_count": 31,
+      "download_count": 36,
       "app_type": "docker",
       "category": "content"
     },
@@ -1413,7 +1413,7 @@
         "arm"
       ],
       "updated_at": "2026-04-11T08:09:10Z",
-      "download_count": 38,
+      "download_count": 40,
       "app_type": "native",
       "category": "network"
     },
@@ -1423,9 +1423,9 @@
       "file_prefix": "moviepilot",
       "display_name": "MoviePilot",
       "description": "影视自动化管理工具,支持自动订阅、下载、整理和通知。首次启动通过 Web UI 配置。",
-      "version": "2.10.10",
-      "fpk_version": "2.10.10",
-      "release_tag": "moviepilot/v2.10.10",
+      "version": "2.10.11",
+      "fpk_version": "2.10.11",
+      "release_tag": "moviepilot/v2.10.11",
       "service_port": 3000,
       "homepage_url": "https://github.com/jxxghp/MoviePilot",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/moviepilot/fnos/ICON_256.PNG",
@@ -1433,7 +1433,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-05T08:40:24Z",
+      "updated_at": "2026-05-08T08:28:04Z",
       "download_count": 133,
       "app_type": "docker",
       "category": "content",
@@ -1477,7 +1477,7 @@
         "arm"
       ],
       "updated_at": "2026-05-06T17:11:17Z",
-      "download_count": 443,
+      "download_count": 444,
       "app_type": "docker",
       "category": "ai"
     },
@@ -1498,7 +1498,7 @@
         "arm"
       ],
       "updated_at": "2026-04-13T08:37:09Z",
-      "download_count": 148,
+      "download_count": 150,
       "app_type": "native",
       "category": "media"
     },
@@ -1541,7 +1541,7 @@
         "arm"
       ],
       "updated_at": "2026-04-28T08:45:13Z",
-      "download_count": 48,
+      "download_count": 49,
       "app_type": "docker",
       "category": "system"
     },
@@ -1562,7 +1562,7 @@
         "arm"
       ],
       "updated_at": "2026-05-01T08:35:25Z",
-      "download_count": 38,
+      "download_count": 39,
       "app_type": "docker",
       "category": "content"
     },
@@ -1698,9 +1698,9 @@
       "file_prefix": "ollama",
       "display_name": "Ollama",
       "description": "本地大语言模型运行引擎，支持 Llama、Mistral、Gemma 等开源模型。",
-      "version": "0.23.1",
-      "fpk_version": "0.23.1",
-      "release_tag": "ollama/v0.23.1",
+      "version": "0.23.2",
+      "fpk_version": "0.23.2",
+      "release_tag": "ollama/v0.23.2",
       "service_port": 11434,
       "homepage_url": "https://github.com/ollama/ollama",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/ollama/fnos/ICON_256.PNG",
@@ -1708,7 +1708,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-06T09:13:35Z",
+      "updated_at": "2026-05-08T08:28:10Z",
       "download_count": 159,
       "app_type": "docker",
       "category": "ai"
@@ -1793,7 +1793,7 @@
         "arm"
       ],
       "updated_at": "2026-04-27T13:50:49Z",
-      "download_count": 93,
+      "download_count": 95,
       "app_type": "native",
       "category": "content"
     },
@@ -1919,7 +1919,7 @@
         "arm"
       ],
       "updated_at": "2026-04-11T08:09:33Z",
-      "download_count": 310,
+      "download_count": 313,
       "app_type": "native",
       "category": "media"
     },
@@ -2024,7 +2024,7 @@
         "arm"
       ],
       "updated_at": "2026-03-26T16:24:36Z",
-      "download_count": 282,
+      "download_count": 283,
       "app_type": "native",
       "category": "automation"
     },
@@ -2045,7 +2045,7 @@
         "arm"
       ],
       "updated_at": "2026-05-02T08:27:30Z",
-      "download_count": 108,
+      "download_count": 109,
       "app_type": "native",
       "category": "download"
     },
@@ -2055,9 +2055,9 @@
       "file_prefix": "reactive-resume",
       "display_name": "Reactive Resume",
       "description": "在线简历制作工具，支持多种模板和实时预览。",
-      "version": "v5.0.20",
-      "fpk_version": "v5.0.20",
-      "release_tag": "reactive-resume/vv5.0.20",
+      "version": "v5.1.0",
+      "fpk_version": "v5.1.0",
+      "release_tag": "reactive-resume/vv5.1.0",
       "service_port": 3200,
       "homepage_url": "https://github.com/amruthpillai/reactive-resume",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/reactive-resume/fnos/ICON_256.PNG",
@@ -2065,7 +2065,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-04-28T08:45:06Z",
+      "updated_at": "2026-05-08T08:28:03Z",
       "download_count": 52,
       "app_type": "docker",
       "category": "content"
@@ -2192,7 +2192,7 @@
         "arm"
       ],
       "updated_at": "2026-04-17T08:29:56Z",
-      "download_count": 67,
+      "download_count": 68,
       "app_type": "native",
       "category": "automation"
     },
@@ -2202,9 +2202,9 @@
       "file_prefix": "stirling-pdf",
       "display_name": "Stirling-PDF",
       "description": "功能强大的本地 PDF 工具箱，支持合并、拆分、OCR 等操作",
-      "version": "2.10.0",
-      "fpk_version": "2.10.0",
-      "release_tag": "stirling-pdf/v2.10.0",
+      "version": "2.10.1",
+      "fpk_version": "2.10.1",
+      "release_tag": "stirling-pdf/v2.10.1",
       "service_port": 18080,
       "homepage_url": "https://stirlingpdf.io",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/stirling-pdf/fnos/ICON_256.PNG",
@@ -2212,7 +2212,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-04-25T08:15:47Z",
+      "updated_at": "2026-05-08T08:28:04Z",
       "download_count": 107,
       "app_type": "docker",
       "category": "system"
@@ -2255,7 +2255,7 @@
         "arm"
       ],
       "updated_at": "2026-04-15T08:29:43Z",
-      "download_count": 21,
+      "download_count": 25,
       "app_type": "docker",
       "category": "media"
     },
@@ -2297,7 +2297,7 @@
         "arm"
       ],
       "updated_at": "2026-04-10T08:27:06Z",
-      "download_count": 75,
+      "download_count": 78,
       "app_type": "native",
       "category": "download"
     },
@@ -2318,7 +2318,7 @@
         "arm"
       ],
       "updated_at": "2026-03-28T08:08:16Z",
-      "download_count": 191,
+      "download_count": 203,
       "app_type": "docker",
       "category": "network"
     },
@@ -2339,7 +2339,7 @@
         "arm"
       ],
       "updated_at": "2026-05-05T08:40:17Z",
-      "download_count": 18,
+      "download_count": 19,
       "app_type": "docker",
       "category": "media"
     },
@@ -2360,7 +2360,7 @@
         "arm"
       ],
       "updated_at": "2026-04-16T08:29:15Z",
-      "download_count": 137,
+      "download_count": 139,
       "app_type": "docker",
       "category": "media"
     },
@@ -2423,7 +2423,7 @@
         "arm"
       ],
       "updated_at": "2026-05-04T08:46:13Z",
-      "download_count": 66,
+      "download_count": 67,
       "app_type": "docker",
       "category": "system"
     },
@@ -2517,9 +2517,9 @@
       "file_prefix": "zeroclaw",
       "display_name": "ZeroClaw",
       "description": "轻量级 AI 智能体运行时，Rust 编写，<5MB 内存占用，支持多模型多通道自主智能体工作流",
-      "version": "0.7.4",
-      "fpk_version": "0.7.4",
-      "release_tag": "zeroclaw/v0.7.4",
+      "version": "0.7.5",
+      "fpk_version": "0.7.5",
+      "release_tag": "zeroclaw/v0.7.5",
       "service_port": 42617,
       "homepage_url": "https://github.com/zeroclaw-labs/zeroclaw",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/zeroclaw/fnos/ICON_256.PNG",
@@ -2527,7 +2527,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-01T08:35:22Z",
+      "updated_at": "2026-05-08T08:28:13Z",
       "download_count": 129,
       "app_type": "native",
       "category": "ai"
