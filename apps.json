@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-11T06:56:50Z",
+  "generated_at": "2026-05-11T09:02:30Z",
   "source": {
     "name": "conversun/fnos-apps",
     "url": "https://github.com/conversun/fnos-apps"
@@ -23,7 +23,7 @@
         "arm"
       ],
       "updated_at": "2026-05-06T17:11:27Z",
-      "download_count": 68,
+      "download_count": 69,
       "app_type": "native",
       "category": "system"
     },
@@ -86,7 +86,7 @@
         "arm"
       ],
       "updated_at": "2026-04-20T08:40:02Z",
-      "download_count": 151,
+      "download_count": 152,
       "app_type": "native",
       "category": "download"
     },
@@ -171,7 +171,7 @@
         "arm"
       ],
       "updated_at": "2026-04-20T08:39:56Z",
-      "download_count": 42,
+      "download_count": 44,
       "app_type": "docker",
       "category": "automation"
     },
@@ -297,7 +297,7 @@
         "arm"
       ],
       "updated_at": "2026-04-12T08:13:27Z",
-      "download_count": 486,
+      "download_count": 487,
       "app_type": "docker",
       "category": "browser"
     },
@@ -665,9 +665,9 @@
       "file_prefix": "freshrss",
       "display_name": "FreshRSS",
       "description": "自托管 RSS 阅读器，支持 Google Reader API 和第三方客户端",
-      "version": "1.28.1",
-      "fpk_version": "1.28.1",
-      "release_tag": "freshrss/v1.28.1",
+      "version": "1.29.0",
+      "fpk_version": "1.29.0",
+      "release_tag": "freshrss/v1.29.0",
       "service_port": 8180,
       "homepage_url": "https://freshrss.org",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/freshrss/fnos/ICON_256.PNG",
@@ -675,7 +675,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-04-14T08:29:36Z",
+      "updated_at": "2026-05-11T09:02:04Z",
       "download_count": 23,
       "app_type": "docker",
       "category": "content"
@@ -760,7 +760,7 @@
         "arm"
       ],
       "updated_at": "2026-04-18T08:11:12Z",
-      "download_count": 142,
+      "download_count": 143,
       "app_type": "native",
       "category": "download"
     },
@@ -907,7 +907,7 @@
         "arm"
       ],
       "updated_at": "2026-04-14T08:29:38Z",
-      "download_count": 356,
+      "download_count": 357,
       "app_type": "docker",
       "category": "media"
     },
@@ -938,9 +938,9 @@
       "file_prefix": "jackett",
       "display_name": "Jackett",
       "description": "Torrent 索引器代理，为 Sonarr/Radarr 等工具提供统一的搜索接口。",
-      "version": "0.24.1831",
-      "fpk_version": "0.24.1831",
-      "release_tag": "jackett/v0.24.1831",
+      "version": "0.24.1841",
+      "fpk_version": "0.24.1841",
+      "release_tag": "jackett/v0.24.1841",
       "service_port": 9117,
       "homepage_url": "https://github.com/Jackett/Jackett",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/jackett/fnos/ICON_256.PNG",
@@ -948,7 +948,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-10T08:34:27Z",
+      "updated_at": "2026-05-11T09:02:11Z",
       "download_count": 96,
       "app_type": "native",
       "category": "automation"
@@ -1096,7 +1096,7 @@
         "arm"
       ],
       "updated_at": "2026-04-24T08:36:49Z",
-      "download_count": 64,
+      "download_count": 65,
       "app_type": "docker",
       "category": "media"
     },
@@ -1106,9 +1106,9 @@
       "file_prefix": "koodo-reader",
       "display_name": "Koodo Reader",
       "description": "开源电子书阅读器，支持 EPUB、PDF、Mobi 等格式，跨平台同步阅读进度。",
-      "version": "2.3.2",
-      "fpk_version": "2.3.2",
-      "release_tag": "koodo-reader/v2.3.2",
+      "version": "2.3.3",
+      "fpk_version": "2.3.3",
+      "release_tag": "koodo-reader/v2.3.3",
       "service_port": 8930,
       "homepage_url": "https://github.com/koodo-reader/koodo-reader",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/koodo-reader/fnos/ICON_256.PNG",
@@ -1116,8 +1116,8 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-04-19T08:16:31Z",
-      "download_count": 92,
+      "updated_at": "2026-05-11T09:02:06Z",
+      "download_count": 93,
       "app_type": "docker",
       "category": "media"
     },
@@ -1244,7 +1244,7 @@
         "arm"
       ],
       "updated_at": "2026-04-16T08:29:28Z",
-      "download_count": 25,
+      "download_count": 26,
       "app_type": "native",
       "category": "system"
     },
@@ -1329,7 +1329,7 @@
         "arm"
       ],
       "updated_at": "2026-04-16T08:29:19Z",
-      "download_count": 50,
+      "download_count": 51,
       "app_type": "docker",
       "category": "automation"
     },
@@ -1740,9 +1740,9 @@
       "file_prefix": "open-webui",
       "display_name": "Open WebUI",
       "description": "AI 对话界面，支持连接 Ollama、OpenAI 等多种大语言模型。",
-      "version": "0.9.4",
-      "fpk_version": "0.9.4",
-      "release_tag": "open-webui/v0.9.4",
+      "version": "0.9.5",
+      "fpk_version": "0.9.5",
+      "release_tag": "open-webui/v0.9.5",
       "service_port": 8080,
       "homepage_url": "https://github.com/open-webui/open-webui",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/open-webui/fnos/ICON_256.PNG",
@@ -1750,7 +1750,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-09T08:29:24Z",
+      "updated_at": "2026-05-11T09:02:02Z",
       "download_count": 278,
       "app_type": "docker",
       "category": "ai"
@@ -1793,7 +1793,7 @@
         "arm"
       ],
       "updated_at": "2026-04-27T13:50:49Z",
-      "download_count": 131,
+      "download_count": 132,
       "app_type": "native",
       "category": "content"
     },
@@ -1919,7 +1919,7 @@
         "arm"
       ],
       "updated_at": "2026-04-11T08:09:33Z",
-      "download_count": 332,
+      "download_count": 334,
       "app_type": "native",
       "category": "media"
     },
@@ -2024,7 +2024,7 @@
         "arm"
       ],
       "updated_at": "2026-03-26T16:24:36Z",
-      "download_count": 293,
+      "download_count": 295,
       "app_type": "native",
       "category": "automation"
     },
@@ -2055,9 +2055,9 @@
       "file_prefix": "reactive-resume",
       "display_name": "Reactive Resume",
       "description": "在线简历制作工具，支持多种模板和实时预览。",
-      "version": "v5.1.1",
-      "fpk_version": "v5.1.1",
-      "release_tag": "reactive-resume/vv5.1.1",
+      "version": "v5.1.2",
+      "fpk_version": "v5.1.2",
+      "release_tag": "reactive-resume/vv5.1.2",
       "service_port": 3200,
       "homepage_url": "https://github.com/amruthpillai/reactive-resume",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/reactive-resume/fnos/ICON_256.PNG",
@@ -2065,7 +2065,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-09T08:29:15Z",
+      "updated_at": "2026-05-11T09:02:09Z",
       "download_count": 52,
       "app_type": "docker",
       "category": "content"
@@ -2318,7 +2318,7 @@
         "arm"
       ],
       "updated_at": "2026-03-28T08:08:16Z",
-      "download_count": 214,
+      "download_count": 216,
       "app_type": "docker",
       "category": "network"
     },
@@ -2549,7 +2549,7 @@
         "arm"
       ],
       "updated_at": "2026-05-11T06:56:33Z",
-      "download_count": 0,
+      "download_count": 2,
       "app_type": "docker",
       "category": "automation",
       "post_install_note": "ZoneFoundry Bridge 客户端容器使用 host 网络模式运行，安装后请填写 ZF_TOKEN。"
