@@ -6,4 +6,4 @@ export HOME="$APP_DATA_DIR"
 mkdir -p "$APP_DATA_DIR"
 
 cd "$APP_DATA_DIR" || exit 1
-exec "$APP_DIR/lucky" --adminAddr "0.0.0.0:${TRIM_SERVICE_PORT}"
+exec "$APP_DIR/lucky" -port "${TRIM_SERVICE_PORT}"
