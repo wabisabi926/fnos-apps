@@ -9,7 +9,7 @@ ZIP_ARCH="${ZIP_ARCH:-${DEB_ARCH:-amd64}}"
 echo "==> Building Alist ${VERSION} for ${ZIP_ARCH}"
 
 DOWNLOAD_URL="https://github.com/AlistGo/alist/releases/download/v${VERSION}/alist-linux-${ZIP_ARCH}.tar.gz"
-curl -fL -o alist.tar.gz "$DOWNLOAD_URL"
+curl -fL --retry 5 --retry-delay 5 --retry-all-errors --connect-timeout 30 -o alist.tar.gz "$DOWNLOAD_URL"
 
 tar -xzf alist.tar.gz
 

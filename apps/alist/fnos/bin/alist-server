@@ -1,9 +1,14 @@
 #!/bin/sh
 APP_DIR="${TRIM_APPDEST}"
 APP_DATA_DIR=$1
+CONFIG_FILE="$APP_DATA_DIR/data/config.json"
+mkdir -p "$APP_DATA_DIR/data"
 
-DATA_DIR="$APP_DATA_DIR/data"
-mkdir -p "$DATA_DIR"
+# First run: substitute placeholders in seed config.json
+if [ -f "$CONFIG_FILE" ] && grep -q "__TRIM_SERVICE_PORT__" "$CONFIG_FILE"; then
+    JWT_SECRET="$(head -c 32 /dev/urandom | base64 | tr -d '\n' | tr -d '+/' | head -c 32)"
+    sed -i "s|__TRIM_SERVICE_PORT__|${TRIM_SERVICE_PORT:-5246}|g; s|__JWT_SECRET__|${JWT_SECRET}|g" "$CONFIG_FILE"
+fi
 
 cd "$APP_DIR" || exit 1
-exec ./alist server --data "$APP_DATA_DIR/data" --port ${TRIM_SERVICE_PORT:-5246}
+exec ./alist server --data "$APP_DATA_DIR/data"

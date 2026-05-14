@@ -49,7 +49,7 @@ app_download() {
 
     info "下载 ($ARCH): $download_url"
     mkdir -p "$WORK_DIR"
-    curl -L -f -o "$WORK_DIR/alist.tar.gz" "$download_url" || error "下载失败"
+    curl -fL --retry 5 --retry-delay 5 --retry-all-errors --connect-timeout 30 -o "$WORK_DIR/alist.tar.gz" "$download_url" || error "下载失败"
     info "下载完成: $(du -h "$WORK_DIR/alist.tar.gz" | cut -f1)"
 }
 
