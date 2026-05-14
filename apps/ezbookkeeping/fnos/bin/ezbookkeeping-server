@@ -1,9 +1,16 @@
 #!/bin/sh
 APP_DIR="${TRIM_APPDEST}"
 APP_DATA_DIR=$1
+CONFIG_FILE="$APP_DATA_DIR/ezbookkeeping.ini"
 
-DATA_DIR="$APP_DATA_DIR/data"
+DATA_DIR="$APP_DATA_DIR/storage"
 mkdir -p "$DATA_DIR"
 
+# First-run config templating: substitute placeholders if config still has them
+if grep -q "__TRIM_SERVICE_PORT__" "$CONFIG_FILE" 2>/dev/null; then
+    SECRET_KEY=$(head -c 32 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 32)
+    sed -i "s|__TRIM_SERVICE_PORT__|${TRIM_SERVICE_PORT}|g; s|__APP_DATA_DIR__|${APP_DATA_DIR}|g; s|__SECRET_KEY__|${SECRET_KEY}|g" "$CONFIG_FILE"
+fi
+
 cd "$APP_DIR" || exit 1
-exec ./ezbookkeeping server run --port ${TRIM_SERVICE_PORT} --data-path "$DATA_DIR"
+exec ./ezbookkeeping server run --conf-path "$CONFIG_FILE"
