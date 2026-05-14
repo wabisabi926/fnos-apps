@@ -1,12 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../../lib/gh-api.sh
+source "$SCRIPT_DIR/../../lib/gh-api.sh"
+
 INPUT_VERSION="${1:-}"
 
 if [ -n "$INPUT_VERSION" ]; then
   VERSION="$INPUT_VERSION"
 else
-  TAG=$(curl -sL "https://api.github.com/repos/pymedusa/Medusa/releases/latest" | jq -r '.tag_name')
+  TAG=$(gh_latest_tag "pymedusa/Medusa") || { echo "Failed to resolve version for medusa" >&2; exit 1; }
   VERSION=$(echo "$TAG" | sed -E 's/^v//')
 fi
 

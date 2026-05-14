@@ -1,14 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-INPUT_VERSION="${1:-}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../../lib/gh-api.sh
+source "$SCRIPT_DIR/../../lib/gh-api.sh"
 
-TAG=$(curl -sL "https://api.github.com/repos/nextcloud/server/releases/latest" | \
-  jq -r '.tag_name')
+INPUT_VERSION="${1:-}"
 
 if [ -n "$INPUT_VERSION" ]; then
   VERSION="$INPUT_VERSION"
 else
+  TAG=$(gh_latest_tag "nextcloud/server") || { echo "Failed to resolve version for nextcloud" >&2; exit 1; }
   VERSION=$(echo "$TAG" | sed 's/^v//')
 fi
 

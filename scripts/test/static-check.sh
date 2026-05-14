@@ -370,7 +370,7 @@ run_health_schema_subcheck() {
 check_one_app() {
     local slug="$1"
     note "── $slug ──"
-    check_app_dir_layout "$slug" || return
+    check_app_dir_layout "$slug" || return 0
     check_icons_nonempty "$slug" || true
     check_manifest_keys  "$slug" || true
     check_manifest_values "$slug" || true

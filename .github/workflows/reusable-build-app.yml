@@ -82,6 +82,8 @@ jobs:
           APP="${{ inputs.app }}"
           INPUT_VERSION="${{ inputs.version }}"
           bash "scripts/apps/${APP}/get-latest-version.sh" "${INPUT_VERSION}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check Release and Determine Tag
         id: check
