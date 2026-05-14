@@ -18,7 +18,11 @@ esac
 
 TARBALL_URL="https://repo.jellyfin.org/files/server/linux/latest-stable/${TARBALL_ARCH}/jellyfin_${VERSION}-${TARBALL_ARCH}.tar.gz"
 FFMPEG_BASE="https://repo.jellyfin.org/files/ffmpeg/linux/latest-7.x/${TARBALL_ARCH}"
-FFMPEG_FILE=$(curl -sL "$FFMPEG_BASE/" | grep -oP 'jellyfin-ffmpeg_[^"]*_portable_'"${PORTABLE_SUFFIX}"'-gpl\.tar\.\w+' | head -1)
+if [ -n "${FFMPEG_PIN:-}" ]; then
+    FFMPEG_FILE="${FFMPEG_PIN}"
+else
+    FFMPEG_FILE=$(curl -sL "$FFMPEG_BASE/" | grep -oE 'jellyfin-ffmpeg_[^"]*_portable_'${PORTABLE_SUFFIX}'-gpl\.tar\.\w+' | head -1)
+fi
 [ -z "$FFMPEG_FILE" ] && { echo "Failed to resolve ffmpeg portable from $FFMPEG_BASE/" >&2; exit 1; }
 FFMPEG_URL="${FFMPEG_BASE}/${FFMPEG_FILE}"
 echo "==> FFmpeg: $FFMPEG_FILE"

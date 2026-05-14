@@ -44,7 +44,11 @@ app_download() {
     local tarball_url="https://repo.jellyfin.org/files/server/linux/latest-stable/${TARBALL_ARCH}/jellyfin_${APP_VERSION}-${TARBALL_ARCH}.tar.gz"
     local ffmpeg_base="https://repo.jellyfin.org/files/ffmpeg/linux/latest-7.x/${TARBALL_ARCH}"
     local ffmpeg_file
-    ffmpeg_file=$(curl -sL "$ffmpeg_base/" | grep -oP 'jellyfin-ffmpeg_[^"]*_portable_'"${PORTABLE_SUFFIX}"'-gpl\.tar\.\w+' | head -1)
+    if [ -n "${FFMPEG_PIN:-}" ]; then
+        ffmpeg_file="${FFMPEG_PIN}"
+    else
+        ffmpeg_file=$(curl -sL "$ffmpeg_base/" | grep -oE 'jellyfin-ffmpeg_[^"]*_portable_'${PORTABLE_SUFFIX}'-gpl\.tar\.\w+' | head -1)
+    fi
     [ -z "$ffmpeg_file" ] && error "无法从 $ffmpeg_base/ 解析 ffmpeg portable 文件名"
     local ffmpeg_url="${ffmpeg_base}/${ffmpeg_file}"
 
