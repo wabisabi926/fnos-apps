@@ -11,7 +11,7 @@ APP_VERSION_VAR="ONEPANEL_VERSION"
 APP_VERSION="${ONEPANEL_VERSION:-latest}"
 APP_DEPS=(curl tar)
 APP_FPK_PREFIX="1panel"
-APP_HELP_VERSION_EXAMPLE="2.1.7"
+APP_HELP_VERSION_EXAMPLE="1.10.34-lts"
 
 app_set_arch_vars() {
     case "$ARCH" in
@@ -33,7 +33,7 @@ app_get_latest_version() {
 
     if [ "$APP_VERSION" = "latest" ]; then
         local cdn_version
-        cdn_version=$(curl -sL "https://resource.1panel.pro/v2/stable/latest" 2>/dev/null)
+        cdn_version=$(curl -sL "https://resource.1panel.pro/stable/latest" 2>/dev/null)
         APP_VERSION=$(echo "$cdn_version" | sed 's/^v//')
     fi
 
@@ -42,7 +42,7 @@ app_get_latest_version() {
 }
 
 app_download() {
-    local download_url="https://resource.1panel.pro/v2/stable/v${APP_VERSION}/release/1panel-v${APP_VERSION}-linux-${ZIP_ARCH}.tar.gz"
+    local download_url="https://resource.1panel.pro/stable/v${APP_VERSION}/release/1panel-v${APP_VERSION}-linux-${ZIP_ARCH}.tar.gz"
 
     info "下载 ($ARCH): $download_url"
     mkdir -p "$WORK_DIR"

@@ -232,6 +232,14 @@ cmd_install() {
 
 cmd_start() {
     load_state
+    local health_type="http"
+    if [ -n "${HEALTH_JSON:-}" ] && [ -f "$HEALTH_JSON" ]; then
+        health_type="$(jq -r '.type // "http"' "$HEALTH_JSON")"
+    fi
+    if [ "$health_type" = "skip" ]; then
+        log "health.type=skip — start skipped (driver / data-only / non-service package)"
+        return 0
+    fi
     local main="$EXTRACT_BASE/cmd/main"
     [ -x "$main" ] || die "cmd/main missing or not executable"
     log "Running cmd/main start (as $TRIM_USERNAME)"
@@ -327,6 +335,14 @@ cmd_probe() {
 
 cmd_stop() {
     load_state
+    local health_type="http"
+    if [ -n "${HEALTH_JSON:-}" ] && [ -f "$HEALTH_JSON" ]; then
+        health_type="$(jq -r '.type // "http"' "$HEALTH_JSON")"
+    fi
+    if [ "$health_type" = "skip" ]; then
+        log "health.type=skip — stop skipped"
+        return 0
+    fi
     local main="$EXTRACT_BASE/cmd/main"
     [ -x "$main" ] || die "cmd/main missing"
     log "Running cmd/main stop (as $TRIM_USERNAME)"
