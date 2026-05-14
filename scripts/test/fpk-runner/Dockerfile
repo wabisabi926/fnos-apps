@@ -11,6 +11,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
         python3 python3-yaml \
         iproute2 net-tools netcat-openbsd \
         sudo libicu74 \
+        ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /vol1/@appcenter /vol1/@appdata /vol1/@appconf \

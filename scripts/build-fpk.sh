@@ -89,6 +89,11 @@ if [ -d "$APP_DIR/fnos/config" ]; then
     cp -a "$APP_DIR/fnos/config" "$PKG_DIR/"
 fi
 
+# 4a. Copy var/ (seed files synced to TRIM_PKGVAR by sync_var_folder on install)
+if [ -d "$APP_DIR/var" ]; then
+    cp -a "$APP_DIR/var" "$PKG_DIR/"
+fi
+
 # 5. Copy wizard/ - app-specific first, fall back to shared
 if [ -d "$APP_DIR/fnos/wizard" ]; then
     cp -a "$APP_DIR/fnos/wizard" "$PKG_DIR/"

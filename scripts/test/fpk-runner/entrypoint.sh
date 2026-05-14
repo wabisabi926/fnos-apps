@@ -201,6 +201,11 @@ cmd_install() {
     [ -f "$EXTRACT_BASE/app.tgz" ] || die "fpk missing app.tgz"
     tar -xzf "$EXTRACT_BASE/app.tgz" -C "$TRIM_APPDEST" || die "app.tgz extract failed"
 
+    # Copy var/ from fpk root to TRIM_APPDEST (mirrors real fnOS extraction)
+    if [ -d "$EXTRACT_BASE/var" ]; then
+        cp -a "$EXTRACT_BASE/var" "$TRIM_APPDEST/"
+    fi
+
     chown_app_dirs
 
     if [ -f "$EXTRACT_BASE/health.json" ]; then
