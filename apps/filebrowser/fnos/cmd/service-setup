@@ -12,9 +12,9 @@ SVC_WRITE_PID=y
 
 service_preuninst() {
     # 兜底：确保 filebrowser 进程被完全终止
-    pkill -f "filebrowser" 2>/dev/null || true
+    pkill -x "filebrowser" 2>/dev/null || true
     sleep 1
-    pkill -9 -f "filebrowser" 2>/dev/null || true
+    pkill -9 -x "filebrowser" 2>/dev/null || true
 }
 
 service_poststop() {

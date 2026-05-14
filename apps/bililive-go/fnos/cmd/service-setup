@@ -11,9 +11,9 @@ SVC_BACKGROUND=y
 SVC_WRITE_PID=y
 
 service_preuninst() {
-    pkill -f "bililive" 2>/dev/null || true
+    pkill -x "bililive" 2>/dev/null || true
     sleep 1
-    pkill -9 -f "bililive" 2>/dev/null || true
+    pkill -9 -x "bililive" 2>/dev/null || true
 }
 
 service_poststop() {
