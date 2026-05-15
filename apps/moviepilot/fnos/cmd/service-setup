@@ -14,11 +14,11 @@ service_postinst() {
     # behavior when wizard left blank.
     : > "$env_file"
     if [ -n "${wizard_media_dir}" ]; then
-        echo "MEDIA_DIR=${wizard_media_dir}" >> "$env_file"
+        apply_media_dir "${wizard_media_dir}"
         mkdir -p "${wizard_media_dir}" 2>/dev/null || true
     fi
     if [ -n "${wizard_download_dir}" ]; then
-        echo "DOWNLOAD_DIR=${wizard_download_dir}" >> "$env_file"
+        apply_download_dir "${wizard_download_dir}"
         mkdir -p "${wizard_download_dir}" 2>/dev/null || true
     fi
     if [ -n "${wizard_password}" ]; then
@@ -49,6 +49,29 @@ service_restore() {
 
 COMPOSE_FILE="${TRIM_APPDEST}/docker/docker-compose.yaml"
 PORT_SAVE="${TRIM_PKGVAR}/.port"
+MEDIA_DIR_SAVE="${TRIM_PKGVAR}/.media_dir"
+DOWNLOAD_DIR_SAVE="${TRIM_PKGVAR}/.download_dir"
+
+# MEDIA_DIR / DOWNLOAD_DIR appear inside Compose's volumes: bindings, e.g.
+#   - ${MEDIA_DIR:-${TRIM_PKGVAR:?}/media}:/media
+# Volume substitutions are evaluated at compose parse time using shell env or
+# cwd-discovered .env — NOT the env_file directive. So we sed-patch directly,
+# mirroring ani-rss's approach for its download_dir.
+apply_media_dir() {
+    local dir="$1"
+    [ -z "$dir" ] && return
+    sed -i 's|^      - .*:/media$|      - '"${dir}"':/media|' "$COMPOSE_FILE"
+    echo "${dir}" > "$MEDIA_DIR_SAVE"
+    install_log "Patched docker-compose.yaml: media_dir=${dir}"
+}
+
+apply_download_dir() {
+    local dir="$1"
+    [ -z "$dir" ] && return
+    sed -i 's|^      - .*:/downloads$|      - '"${dir}"':/downloads|' "$COMPOSE_FILE"
+    echo "${dir}" > "$DOWNLOAD_DIR_SAVE"
+    install_log "Patched docker-compose.yaml: download_dir=${dir}"
+}
 
 apply_port() {
     local port="$1"
@@ -61,6 +84,12 @@ apply_port() {
 service_postupgrade() {
     if [ -f "$PORT_SAVE" ]; then
         apply_port "$(cat "$PORT_SAVE")"
+    fi
+    if [ -f "$MEDIA_DIR_SAVE" ]; then
+        apply_media_dir "$(cat "$MEDIA_DIR_SAVE")"
+    fi
+    if [ -f "$DOWNLOAD_DIR_SAVE" ]; then
+        apply_download_dir "$(cat "$DOWNLOAD_DIR_SAVE")"
     fi
 }
 

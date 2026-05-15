@@ -1,20 +1,54 @@
 #!/bin/bash
 # Audiobookshelf Docker app — wizard integration
 
+COMPOSE_FILE="${TRIM_APPDEST}/docker/docker-compose.yaml"
+PORT_SAVE="${TRIM_PKGVAR}/.port"
+AUDIOBOOK_DIR_SAVE="${TRIM_PKGVAR}/.audiobook_dir"
+PODCAST_DIR_SAVE="${TRIM_PKGVAR}/.podcast_dir"
+
+# AUDIOBOOK_DIR / PODCAST_DIR appear inside Compose's volumes: bindings, e.g.
+#   - ${AUDIOBOOK_DIR:-${TRIM_PKGVAR:?}/audiobooks}:/audiobooks
+# Volume substitutions are evaluated at compose parse time and only look at the
+# shell env or the cwd-discovered .env — NOT the env_file directive. So we
+# have to sed-patch docker-compose.yaml directly, mirroring how ani-rss does it.
+apply_audiobook_dir() {
+    local dir="$1"
+    [ -z "$dir" ] && return
+    sed -i 's|^      - .*:/audiobooks$|      - '"${dir}"':/audiobooks|' "$COMPOSE_FILE"
+    echo "${dir}" > "$AUDIOBOOK_DIR_SAVE"
+    install_log "Patched docker-compose.yaml: audiobook_dir=${dir}"
+}
+
+apply_podcast_dir() {
+    local dir="$1"
+    [ -z "$dir" ] && return
+    sed -i 's|^      - .*:/podcasts$|      - '"${dir}"':/podcasts|' "$COMPOSE_FILE"
+    echo "${dir}" > "$PODCAST_DIR_SAVE"
+    install_log "Patched docker-compose.yaml: podcast_dir=${dir}"
+}
+
+apply_port() {
+    local port="$1"
+    [ -z "$port" ] && return
+    sed -i 's/"[^"]*:80"/"'"${port}"':80"/' "$COMPOSE_FILE"
+    echo "${port}" > "$PORT_SAVE"
+    install_log "Patched docker-compose.yaml: port=${port}"
+}
+
 service_postinst() {
     local env_file="${TRIM_APPDEST}/docker/.env"
 
     # Always write .env (env_file directive in compose.yaml requires it).
     : > "$env_file"
     if [ -n "${wizard_audiobook_dir}" ]; then
-        echo "AUDIOBOOK_DIR=${wizard_audiobook_dir}" >> "$env_file"
+        apply_audiobook_dir "${wizard_audiobook_dir}"
         mkdir -p "${wizard_audiobook_dir}" 2>/dev/null || true
     fi
     if [ -n "${wizard_podcast_dir}" ]; then
-        echo "PODCAST_DIR=${wizard_podcast_dir}" >> "$env_file"
+        apply_podcast_dir "${wizard_podcast_dir}"
         mkdir -p "${wizard_podcast_dir}" 2>/dev/null || true
     fi
-    install_log "Wrote docker .env (wizard values applied where supplied)"
+    install_log "Wrote docker .env (custom dirs patched into compose.yaml directly)"
     mkdir -p "${TRIM_PKGVAR}/audiobooks" "${TRIM_PKGVAR}/podcasts" 2>/dev/null || true
 }
 
@@ -31,20 +65,15 @@ service_restore() {
     fi
 }
 
-COMPOSE_FILE="${TRIM_APPDEST}/docker/docker-compose.yaml"
-PORT_SAVE="${TRIM_PKGVAR}/.port"
-
-apply_port() {
-    local port="$1"
-    [ -z "$port" ] && return
-    sed -i 's/"[^"]*:80"/"'"${port}"':80"/' "$COMPOSE_FILE"
-    echo "${port}" > "$PORT_SAVE"
-    install_log "Patched docker-compose.yaml: port=${port}"
-}
-
 service_postupgrade() {
     if [ -f "$PORT_SAVE" ]; then
         apply_port "$(cat "$PORT_SAVE")"
+    fi
+    if [ -f "$AUDIOBOOK_DIR_SAVE" ]; then
+        apply_audiobook_dir "$(cat "$AUDIOBOOK_DIR_SAVE")"
+    fi
+    if [ -f "$PODCAST_DIR_SAVE" ]; then
+        apply_podcast_dir "$(cat "$PODCAST_DIR_SAVE")"
     fi
 }
 
