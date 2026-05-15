@@ -5,4 +5,12 @@ APP_DATA_DIR=$1
 mkdir -p "$APP_DATA_DIR/attachments"
 
 cd "$APP_DIR" || exit 1
-exec ./ntfy serve --listen-http :${TRIM_SERVICE_PORT:-2586} --cache-file "$APP_DATA_DIR/cache.db" --attachment-cache-dir "$APP_DATA_DIR/attachments"
+# ntfy refuses to start when --attachment-cache-dir is set but --base-url is empty.
+# Use http://localhost:PORT as the canonical self-hosted placeholder (matches the
+# upstream Umbrel integration pattern). Users wanting LAN attachment URLs should
+# set NTFY_BASE_URL to their NAS IP, or edit /etc/ntfy/server.yml.
+exec ./ntfy serve \
+    --listen-http ":${TRIM_SERVICE_PORT:-2586}" \
+    --base-url "http://localhost:${TRIM_SERVICE_PORT:-2586}" \
+    --cache-file "$APP_DATA_DIR/cache.db" \
+    --attachment-cache-dir "$APP_DATA_DIR/attachments"
