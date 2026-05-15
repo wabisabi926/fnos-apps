@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-15T04:42:12Z",
+  "generated_at": "2026-05-15T04:42:32Z",
   "source": {
     "name": "conversun/fnos-apps",
     "url": "https://github.com/conversun/fnos-apps"
@@ -2518,8 +2518,8 @@
       "display_name": "ZoneFoundry Bridge",
       "description": "ZoneFoundry 自建桥接，连接家中 Sonos 与 ZoneFoundry 云端中继，远程通过语音 / IM / 网页操控 Sonos 音箱。",
       "version": "0.1.9",
-      "fpk_version": "0.1.9",
-      "release_tag": "zonefoundry-bridge/v0.1.9",
+      "fpk_version": "0.1.9-r1",
+      "release_tag": "zonefoundry-bridge/v0.1.9-r1",
       "service_port": 18790,
       "homepage_url": "https://zonefoundry.dev",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/zonefoundry-bridge/fnos/ICON_256.PNG",
@@ -2527,7 +2527,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-11T06:56:33Z",
+      "updated_at": "2026-05-15T04:42:14Z",
       "download_count": 18,
       "app_type": "docker",
       "category": "automation",
