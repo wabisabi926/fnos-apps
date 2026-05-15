@@ -7,14 +7,6 @@ services:
     volumes:
       - ${TRIM_PKGVAR:?}/config:/config
       - ${TRIM_PKGVAR:?}/fonts:/usr/share/fonts
-    # Explicit env_file directive: fnOS framework invokes \`docker compose\` from a
-    # path that does NOT auto-discover \`.env\` from the compose-file directory. This
-    # directive forces docker compose to load /var/apps/firefox/docker/.env so the
-    # wizard-supplied VNC_PASSWORD actually reaches the container (issue #146).
-    # service_postinst ALWAYS writes .env (with VNC_PASSWORD empty by default) to
-    # guarantee this file exists.
-    env_file:
-      - .env
     environment:
       - USER_ID=${TRIM_UID}
       - GROUP_ID=${TRIM_GID}

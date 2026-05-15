@@ -24,16 +24,11 @@ sanitize_vnc_password() {
 }
 
 service_postinst() {
-    local env_file="${TRIM_APPDEST}/docker/.env"
-
     mkdir -p "${TRIM_PKGVAR}/config" 2>/dev/null || true
     mkdir -p "${TRIM_PKGVAR}/fonts" 2>/dev/null || true
 
-    # ALWAYS write .env, even if user did not supply a password.
-    # docker-compose.yaml declares \`env_file: [.env]\` so the file MUST exist
-    # (otherwise compose fails). We write VNC_PASSWORD=\"\" by default which leaves
-    # the GUI unprotected (jlesage default behavior), and overwrite with the
-    # sanitized wizard value when present.
+    # Write VNC password via .vncpass_clear file in the /config volume.
+    # jlesage containers read this file on startup (preferred over env var).
     local clean=""
     if [ -n "${wizard_password}" ]; then
         clean="$(sanitize_vnc_password "${wizard_password}")"
@@ -41,29 +36,13 @@ service_postinst() {
             install_log "wizard_password contained only invalid characters; VNC auth NOT enabled"
         fi
     fi
-    cat > "$env_file" <<EOF
-# Written by service_postinst at install time.
-# Edit VNC_PASSWORD below and restart Firefox to change the access password.
-VNC_PASSWORD=${clean}
-EOF
-    chmod 600 "$env_file"
     if [ -n "$clean" ]; then
-        install_log "Wrote docker .env: VNC_PASSWORD set (sanitized length=${#clean})"
+        printf '%s' "$clean" > "${TRIM_PKGVAR}/config/.vncpass_clear"
+        chmod 600 "${TRIM_PKGVAR}/config/.vncpass_clear"
+        install_log "VNC password set via .vncpass_clear (length=${#clean})"
     else
-        install_log "Wrote docker .env: VNC_PASSWORD empty (no auth, Firefox open to anyone reaching port)"
-    fi
-}
-
-service_preupgrade() {
-    if [ -f "${TRIM_APPDEST}/docker/.env" ]; then
-        cp "${TRIM_APPDEST}/docker/.env" "${TRIM_PKGVAR}/.env.bak"
-    fi
-}
-
-service_restore() {
-    if [ -f "${TRIM_PKGVAR}/.env.bak" ]; then
-        cp "${TRIM_PKGVAR}/.env.bak" "${TRIM_APPDEST}/docker/.env"
-        rm -f "${TRIM_PKGVAR}/.env.bak"
+        rm -f "${TRIM_PKGVAR}/config/.vncpass_clear"
+        install_log "VNC password not set (no auth)"
     fi
 }
 
