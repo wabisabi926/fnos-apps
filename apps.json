@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-15T04:42:32Z",
+  "generated_at": "2026-05-15T04:54:39Z",
   "source": {
     "name": "conversun/fnos-apps",
     "url": "https://github.com/conversun/fnos-apps"
@@ -13,8 +13,8 @@
       "display_name": "1Panel",
       "description": "开源服务器运维管理面板，提供可视化的 Linux 服务器管理。",
       "version": "1.10.34-lts",
-      "fpk_version": "1.10.34-lts-r1",
-      "release_tag": "1panel/v1.10.34-lts-r1",
+      "fpk_version": "1.10.34-lts-r2",
+      "release_tag": "1panel/v1.10.34-lts-r2",
       "service_port": 10086,
       "homepage_url": "https://1panel.cn",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/1panel/fnos/ICON_256.PNG",
@@ -22,7 +22,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-14T15:02:18Z",
+      "updated_at": "2026-05-15T04:54:10Z",
       "download_count": 90,
       "app_type": "native",
       "category": "system"
@@ -1657,8 +1657,8 @@
       "display_name": "Ntfy",
       "description": "自托管的推送通知服务器，支持 HTTP 接口发送通知到手机和桌面。",
       "version": "2.22.0",
-      "fpk_version": "2.22.0",
-      "release_tag": "ntfy/v2.22.0",
+      "fpk_version": "2.22.0-r1",
+      "release_tag": "ntfy/v2.22.0-r1",
       "service_port": 2586,
       "homepage_url": "https://ntfy.sh",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/ntfy/fnos/ICON_256.PNG",
@@ -1666,7 +1666,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-04-22T08:30:24Z",
+      "updated_at": "2026-05-15T04:54:20Z",
       "download_count": 32,
       "app_type": "native",
       "category": "system"
