@@ -4,13 +4,15 @@ service_postinst() {
     local env_file="${TRIM_APPDEST}/docker/.env"
     mkdir -p "${TRIM_PKGVAR}/data" 2>/dev/null || true
 
+    # Always write .env (env_file directive in compose.yaml requires it).
+    # Empty wizard_token leaves ZF_TOKEN= so compose-side ${ZF_TOKEN:-} default
+    # behavior is preserved.
     : > "$env_file"
     if [ -n "${wizard_token}" ]; then
         echo "ZF_TOKEN=${wizard_token}" >> "$env_file"
-        chmod 600 "$env_file"
-    else
-        rm -f "$env_file"
     fi
+    chmod 600 "$env_file"
+    install_log "Wrote docker .env (wizard values applied where supplied)"
 }
 
 service_preupgrade() {

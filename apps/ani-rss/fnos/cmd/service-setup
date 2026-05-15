@@ -29,12 +29,18 @@ apply_download_dir() {
 }
 
 service_postinst() {
+    # Always write .env (env_file directive in compose.yaml requires it).
+    # Missing wizard_download_dir leaves DOWNLOAD_DIR empty so the compose-side
+    # default \`${DOWNLOAD_DIR:-${TRIM_PKGVAR:?}/downloads}\` still applies.
+    local env_file="${TRIM_APPDEST}/docker/.env"
+    : > "$env_file"
     if [ -n "${wizard_download_dir}" ]; then
-        local env_file="${TRIM_APPDEST}/docker/.env"
-        echo "DOWNLOAD_DIR=${wizard_download_dir}" > "$env_file"
+        echo "DOWNLOAD_DIR=${wizard_download_dir}" >> "$env_file"
         apply_download_dir "${wizard_download_dir}"
         mkdir -p "${wizard_download_dir}" 2>/dev/null || true
         install_log "Wrote docker .env: DOWNLOAD_DIR=${wizard_download_dir}"
+    else
+        install_log "Wrote empty docker .env (using compose-side default)"
     fi
     mkdir -p "${TRIM_PKGVAR}/config" "${TRIM_PKGVAR}/downloads" 2>/dev/null || true
     chown -R "${TRIM_UID}:${TRIM_GID}" "${TRIM_PKGVAR}/config" "${TRIM_PKGVAR}/downloads" 2>/dev/null || true

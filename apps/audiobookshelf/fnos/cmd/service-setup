@@ -3,25 +3,18 @@
 
 service_postinst() {
     local env_file="${TRIM_APPDEST}/docker/.env"
-    local need_env=false
 
+    # Always write .env (env_file directive in compose.yaml requires it).
     : > "$env_file"
     if [ -n "${wizard_audiobook_dir}" ]; then
         echo "AUDIOBOOK_DIR=${wizard_audiobook_dir}" >> "$env_file"
         mkdir -p "${wizard_audiobook_dir}" 2>/dev/null || true
-        need_env=true
     fi
     if [ -n "${wizard_podcast_dir}" ]; then
         echo "PODCAST_DIR=${wizard_podcast_dir}" >> "$env_file"
         mkdir -p "${wizard_podcast_dir}" 2>/dev/null || true
-        need_env=true
     fi
-
-    if [ "$need_env" = true ]; then
-        install_log "Wrote docker .env with wizard values"
-    else
-        rm -f "$env_file"
-    fi
+    install_log "Wrote docker .env (wizard values applied where supplied)"
     mkdir -p "${TRIM_PKGVAR}/audiobooks" "${TRIM_PKGVAR}/podcasts" 2>/dev/null || true
 }
 

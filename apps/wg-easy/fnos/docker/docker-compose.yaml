@@ -7,6 +7,13 @@ services:
       - "51820:51820/udp"
     volumes:
       - ${TRIM_PKGVAR:?}/config:/etc/wireguard
+    # Explicit env_file: fnOS framework invokes docker compose from a cwd where
+    # compose-file-directory \`.env\` auto-discovery does NOT happen. Without this
+    # directive, WG_HOST / PASSWORD_HASH set by the wizard were silently ignored
+    # (latent bug found while fixing #146; same plumbing pattern as firefox).
+    # service_postinst ALWAYS writes .env to guarantee the file exists.
+    env_file:
+      - .env
     environment:
       - TZ=Asia/Shanghai
       - WG_HOST=${WG_HOST:-}

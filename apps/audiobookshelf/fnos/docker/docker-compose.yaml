@@ -9,6 +9,12 @@ services:
       - ${TRIM_PKGVAR:?}/metadata:/metadata
       - ${AUDIOBOOK_DIR:-${TRIM_PKGVAR:?}/audiobooks}:/audiobooks
       - ${PODCAST_DIR:-${TRIM_PKGVAR:?}/podcasts}:/podcasts
+    # Explicit env_file: fnOS framework's docker compose invocation does NOT
+    # auto-discover compose-file-directory \`.env\`. Without this directive,
+    # AUDIOBOOK_DIR / PODCAST_DIR set by the wizard were silently ignored
+    # (latent bug found while fixing #146; same plumbing pattern as firefox).
+    env_file:
+      - .env
     environment:
       - TZ=Asia/Shanghai
     restart: unless-stopped

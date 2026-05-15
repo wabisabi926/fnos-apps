@@ -7,6 +7,12 @@ services:
     volumes:
       - ${TRIM_PKGVAR:?}/config:/config
       - ${DOWNLOAD_DIR:-${TRIM_PKGVAR:?}/downloads}:/downloads
+    # Explicit env_file: fnOS framework's docker compose invocation does NOT
+    # auto-discover compose-file-directory \`.env\`. Without this directive,
+    # DOWNLOAD_DIR set by the wizard was silently ignored (latent bug found
+    # while fixing #146; same plumbing pattern as firefox).
+    env_file:
+      - .env
     environment:
       - TZ=Asia/Shanghai
       - PUID=${TRIM_UID}

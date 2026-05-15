@@ -2,26 +2,21 @@
 
 service_postinst() {
     local env_file="${TRIM_APPDEST}/docker/.env"
-    local need_env=false
 
     mkdir -p "${TRIM_PKGVAR}/config" 2>/dev/null || true
 
+    # Always write .env (env_file directive in compose.yaml requires it).
+    # Missing values stay empty so the compose-side defaults like ${WG_HOST:-}
+    # apply (which is exactly the prior 'unset' behavior).
     : > "$env_file"
     if [ -n "${wizard_wg_host}" ]; then
         echo "WG_HOST=${wizard_wg_host}" >> "$env_file"
-        need_env=true
     fi
     if [ -n "${wizard_password}" ]; then
         echo "PASSWORD_HASH=${wizard_password}" >> "$env_file"
-        need_env=true
     fi
-
-    if [ "$need_env" = true ]; then
-        chmod 600 "$env_file"
-        install_log "Wrote docker .env with wizard values"
-    else
-        rm -f "$env_file"
-    fi
+    chmod 600 "$env_file"
+    install_log "Wrote docker .env (wizard values applied where supplied)"
 }
 
 COMPOSE_FILE="${TRIM_APPDEST}/docker/docker-compose.yaml"

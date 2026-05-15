@@ -36,12 +36,15 @@ BASE_TAG="${APP_SLUG}/v${VERSION}"
 # relied on \`gh release list --limit N\` which silently truncated once the repo
 # grew past N releases (300+ today). Falling back through gh release list keeps
 # us robust if a tag exists without its corresponding release.
+#
+# Tag names contain regex-special chars (e.g. grafana/v13.0.1+security-01), so
+# we do EXACT string membership instead of grep -E to avoid false negatives.
 EXISTING_TAGS=$(
   {
     git ls-remote --tags origin "refs/tags/${BASE_TAG}" "refs/tags/${BASE_TAG}-r*" 2>/dev/null | \
-      awk '{print $2}' | sed 's|^refs/tags/||'
+      awk '{print $2}' | sed 's|^refs/tags/||' | sed 's|\^{}$||'
     gh release list --limit 1000 --json tagName -q ".[] | .tagName | select(startswith(\"${APP_SLUG}/v${VERSION}\"))" 2>/dev/null
-  } | { grep -E "^${BASE_TAG}(-r[0-9]+)?$" || true; } | sort -u
+  } | awk -v base="${BASE_TAG}" '$0==base || index($0, base"-r")==1' | sort -u
 )
 
 if [ -n "${REVISION}" ]; then
@@ -62,8 +65,12 @@ elif [ "${EVENT_NAME}" = "schedule" ]; then
 else
   if [ -n "${EXISTING_TAGS}" ]; then
     HIGHEST_REV=$(
-      echo "${EXISTING_TAGS}" | \
-        sed -n "s/.*-r\([0-9]*\)$/\1/p" | sort -n | tail -1
+      printf '%s\n' "${EXISTING_TAGS}" | awk -v base="${BASE_TAG}" '
+        index($0, base"-r")==1 {
+          rev = substr($0, length(base) + 3)   # strip prefix + "-r"
+          if (rev ~ /^[0-9]+$/) print rev + 0
+        }
+      ' | sort -n | tail -1
     )
     if [ -n "${HIGHEST_REV}" ]; then
       NEXT_REV=$((HIGHEST_REV + 1))
