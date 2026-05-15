@@ -36,7 +36,7 @@ if [ "${#APPS[@]}" -eq 0 ]; then
     fi
     while IFS= read -r slug; do
         APPS+=("$slug")
-    done < <(jq -r '.[] | select(.app_type != "docker") | .slug' "$REPO/apps.json")
+    done < <(jq -r '.apps[] | select(.app_type != "docker") | .slug' "$REPO/apps.json")
     info "Defaulting to ${#APPS[@]} non-docker apps from apps.json"
 fi
 
