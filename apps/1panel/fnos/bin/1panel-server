@@ -5,4 +5,8 @@ APP_DATA_DIR=$1
 mkdir -p "$APP_DATA_DIR"
 
 cd "$APP_DIR" || exit 1
-exec ./1panel --port ${TRIM_SERVICE_PORT:-10086} --base-dir "$APP_DATA_DIR"
+# 1panel binary does NOT accept --port / --base-dir CLI flags. Instead it greps
+# /usr/local/bin/1pctl for ORIGINAL_PORT= and BASE_DIR= at startup
+# (see core/utils/common/common.go LoadParams). The 1pctl file is seeded by
+# service_preinst (runs as root) at install time. Just exec the binary bare here.
+exec ./1panel

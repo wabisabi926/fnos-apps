@@ -10,7 +10,58 @@ SERVICE_COMMAND="$APP_DIR/bin/1panel-server $APP_DATA_DIR"
 SVC_BACKGROUND=y
 SVC_WRITE_PID=y
 
+# Runs as ROOT (via install_init). 1panel's binary reads its port, base
+# directory and other startup params by grepping /usr/local/bin/1pctl
+# (see core/utils/common/common.go LoadParams). The full upstream 1pctl
+# template ships with 8 required keys; without them the binary panics on
+# boot. Seed it here; 1panel then migrates the values into its SQLite DB.
+service_preinst() {
+    # Idempotent: only generate random secrets on first install.
+    local creds="${TRIM_PKGVAR}/CREDENTIALS.txt"
+    local username password entrance
+    if [ -f "$creds" ]; then
+        username=$(grep '^username=' "$creds" | cut -d= -f2-)
+        password=$(grep '^password=' "$creds" | cut -d= -f2-)
+        entrance=$(grep '^entrance=' "$creds" | cut -d= -f2-)
+    else
+        username="admin"
+        password=$(openssl rand -hex 8 2>/dev/null || head -c 8 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 16)
+        entrance=$(openssl rand -hex 4 2>/dev/null || head -c 4 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 8)
+        mkdir -p "${TRIM_PKGVAR}"
+        umask 077
+        cat > "$creds" <<CREDS
+# 1Panel 首次安装生成的默认凭证。登录后请在面板设置中修改并删除本文件。
+username=$username
+password=$password
+entrance=$entrance
+url=http://<NAS-IP>:${TRIM_SERVICE_PORT:-10086}/$entrance
+CREDS
+    fi
+
+    mkdir -p /usr/local/bin
+    cat > /usr/local/bin/1pctl <<EOF
+#!/bin/bash
+# Stub config-source for 1panel. The real 1pctl is the upstream management CLI;
+# the daemon only greps these KEY=VALUE lines at first boot, then migrates
+# values into its SQLite DB at ${TRIM_PKGVAR}/db/1Panel.db.
+# Managed by fnos-apps; change settings via the 1panel UI — do not edit here.
+BASE_DIR=${TRIM_PKGVAR}
+ORIGINAL_PORT=${TRIM_SERVICE_PORT:-10086}
+ORIGINAL_VERSION=${TRIM_APPVERSION:-1.10.34-lts}
+ORIGINAL_ENTRANCE=$entrance
+ORIGINAL_USERNAME=$username
+ORIGINAL_PASSWORD=$password
+LANGUAGE=zh
+PANEL_EDITION=cn
+CHANGE_USER_INFO=false
+EOF
+    chmod 755 /usr/local/bin/1pctl
+}
+
 service_preuninst() {
+    # Runs as ROOT (via uninstall_init). Clean up the 1pctl stub we created.
+    rm -f /usr/local/bin/1pctl
+
     # 使用 -x 精确匹配进程名，避免误杀 appcenter-cli 等包含 "1panel" 参数的进程
     pkill -x "1panel" 2>/dev/null || true
     sleep 1
@@ -18,5 +69,7 @@ service_preuninst() {
 }
 
 service_poststop() {
-    service_preuninst
+    pkill -x "1panel" 2>/dev/null || true
+    sleep 1
+    pkill -9 -x "1panel" 2>/dev/null || true
 }
