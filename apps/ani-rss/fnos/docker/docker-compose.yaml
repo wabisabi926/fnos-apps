@@ -6,13 +6,10 @@ services:
       - "${TRIM_SERVICE_PORT}:7789"
     volumes:
       - ${TRIM_PKGVAR:?}/config:/config
-      - ${DOWNLOAD_DIR:-${TRIM_PKGVAR:?}/downloads}:/downloads
-    # Explicit env_file: fnOS framework's docker compose invocation does NOT
-    # auto-discover compose-file-directory \`.env\`. Without this directive,
-    # DOWNLOAD_DIR set by the wizard was silently ignored (latent bug found
-    # while fixing #146; same plumbing pattern as firefox).
-    env_file:
-      - .env
+      # DOWNLOAD_DIR literal default; service_postinst sed-patches this volume line
+      # in-place when wizard supplies a custom path. (fnOS uses Docker API, not
+      # \`docker compose\` CLI — env_file ignored, interpolation only works for TRIM_.)
+      - ${TRIM_PKGVAR:?}/downloads:/downloads
     environment:
       - TZ=Asia/Shanghai
       - PUID=${TRIM_UID}

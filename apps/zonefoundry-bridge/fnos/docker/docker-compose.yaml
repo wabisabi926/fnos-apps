@@ -14,16 +14,12 @@ services:
     # 用户 (UID 10001) 也能跟 docker socket 讲话.
     group_add:
       - "999"
-    # Explicit env_file: fnOS framework's docker compose invocation does NOT
-    # auto-discover compose-file-directory \`.env\`. Without this directive,
-    # ZF_TOKEN set by the wizard was silently ignored (latent bug found while
-    # fixing #146; same plumbing pattern as firefox).
-    env_file:
-      - .env
     environment:
       - TZ=Asia/Shanghai
       - ZF_RELAY_URL=wss://relay.zonefoundry.dev/ws
       - ZF_AGENT_LABEL=fnos-bridge
-      # ZF_TOKEN supplied via env_file (seed = empty, service_postinst overwrites
-      # with wizard value). Do NOT add it here — environment: overrides env_file.
+      # ZF_TOKEN literal default; service_postinst seds this line in-place when
+      # wizard supplies a token (fnOS reads docker-compose.yaml via Docker API,
+      # not \`docker compose\` CLI, so env_file is ignored).
+      - ZF_TOKEN=
     restart: unless-stopped

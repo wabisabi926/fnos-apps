@@ -1,35 +1,13 @@
 #!/bin/bash
-
-service_postinst() {
-    local env_file="${TRIM_APPDEST}/docker/.env"
-    mkdir -p "${TRIM_PKGVAR}/data" 2>/dev/null || true
-
-    # Always write .env (env_file directive in compose.yaml requires it).
-    # Empty wizard_token leaves ZF_TOKEN= so compose-side ${ZF_TOKEN:-} default
-    # behavior is preserved.
-    : > "$env_file"
-    if [ -n "${wizard_token}" ]; then
-        echo "ZF_TOKEN=${wizard_token}" >> "$env_file"
-    fi
-    chmod 600 "$env_file"
-    install_log "Wrote docker .env (wizard values applied where supplied)"
-}
-
-service_preupgrade() {
-    if [ -f "${TRIM_APPDEST}/docker/.env" ]; then
-        cp "${TRIM_APPDEST}/docker/.env" "${TRIM_PKGVAR}/.env.bak"
-    fi
-}
-
-service_restore() {
-    if [ -f "${TRIM_PKGVAR}/.env.bak" ]; then
-        cp "${TRIM_PKGVAR}/.env.bak" "${TRIM_APPDEST}/docker/.env"
-        rm -f "${TRIM_PKGVAR}/.env.bak"
-    fi
-}
+# ZoneFoundry Bridge — wizard integration
+#
+# fnOS reads docker-compose.yaml via Docker API directly (no \`docker compose\`
+# CLI), so env_file is ignored and \`${VAR:-default}\` is not interpolated for
+# non-TRIM_ env vars. We sed-patch the environment: line in place.
 
 COMPOSE_FILE="${TRIM_APPDEST}/docker/docker-compose.yaml"
 PORT_SAVE="${TRIM_PKGVAR}/.port"
+ZF_TOKEN_SAVE="${TRIM_PKGVAR}/.zf_token"
 
 apply_port() {
     local port="$1"
@@ -38,9 +16,30 @@ apply_port() {
     install_log "Saved custom port: ${port}"
 }
 
+apply_zf_token() {
+    local v="$1"
+    [ -z "$v" ] && return
+    local escaped
+    escaped=$(printf '%s' "$v" | sed 's:[\\&|]:\\\\&:g')
+    sed -i 's|^      - ZF_TOKEN=.*|      - ZF_TOKEN='"${escaped}"'|' "$COMPOSE_FILE"
+    echo "${v}" > "$ZF_TOKEN_SAVE"
+    chmod 600 "$ZF_TOKEN_SAVE"
+    install_log "Patched docker-compose.yaml: ZF_TOKEN set"
+}
+
+service_postinst() {
+    mkdir -p "${TRIM_PKGVAR}/data" 2>/dev/null || true
+    if [ -n "${wizard_token}" ]; then
+        apply_zf_token "${wizard_token}"
+    fi
+}
+
 service_postupgrade() {
     if [ -f "$PORT_SAVE" ]; then
         apply_port "$(cat "$PORT_SAVE")"
+    fi
+    if [ -f "$ZF_TOKEN_SAVE" ]; then
+        apply_zf_token "$(cat "$ZF_TOKEN_SAVE")"
     fi
 }
 

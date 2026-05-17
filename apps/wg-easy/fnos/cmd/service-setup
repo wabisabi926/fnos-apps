@@ -1,26 +1,14 @@
 #!/bin/bash
-
-service_postinst() {
-    local env_file="${TRIM_APPDEST}/docker/.env"
-
-    mkdir -p "${TRIM_PKGVAR}/config" 2>/dev/null || true
-
-    # Always write .env (env_file directive in compose.yaml requires it).
-    # Missing values stay empty so the compose-side defaults like ${WG_HOST:-}
-    # apply (which is exactly the prior 'unset' behavior).
-    : > "$env_file"
-    if [ -n "${wizard_wg_host}" ]; then
-        echo "WG_HOST=${wizard_wg_host}" >> "$env_file"
-    fi
-    if [ -n "${wizard_password}" ]; then
-        echo "PASSWORD_HASH=${wizard_password}" >> "$env_file"
-    fi
-    chmod 600 "$env_file"
-    install_log "Wrote docker .env (wizard values applied where supplied)"
-}
+# WG-Easy Docker app — wizard integration
+#
+# fnOS reads docker-compose.yaml via Docker API directly (no \`docker compose\`
+# CLI), so env_file is ignored and \`${VAR:-default}\` interpolation does not
+# work for non-TRIM_ env vars. We sed-patch the environment: lines in place.
 
 COMPOSE_FILE="${TRIM_APPDEST}/docker/docker-compose.yaml"
 PORT_SAVE="${TRIM_PKGVAR}/.port"
+WG_HOST_SAVE="${TRIM_PKGVAR}/.wg_host"
+PASSWORD_HASH_SAVE="${TRIM_PKGVAR}/.password_hash"
 
 apply_port() {
     local port="$1"
@@ -30,9 +18,46 @@ apply_port() {
     install_log "Patched docker-compose.yaml: port=${port}"
 }
 
+apply_wg_host() {
+    local v="$1"
+    [ -z "$v" ] && return
+    local escaped
+    escaped=$(printf '%s' "$v" | sed 's:[\\&|]:\\\\&:g')
+    sed -i 's|^      - WG_HOST=.*|      - WG_HOST='"${escaped}"'|' "$COMPOSE_FILE"
+    echo "${v}" > "$WG_HOST_SAVE"
+    install_log "Patched docker-compose.yaml: WG_HOST=${v}"
+}
+
+apply_password_hash() {
+    local v="$1"
+    [ -z "$v" ] && return
+    local escaped
+    escaped=$(printf '%s' "$v" | sed 's:[\\&|]:\\\\&:g')
+    sed -i 's|^      - PASSWORD_HASH=.*|      - PASSWORD_HASH='"${escaped}"'|' "$COMPOSE_FILE"
+    echo "${v}" > "$PASSWORD_HASH_SAVE"
+    chmod 600 "$PASSWORD_HASH_SAVE"
+    install_log "Patched docker-compose.yaml: PASSWORD_HASH set (length=${#v})"
+}
+
+service_postinst() {
+    mkdir -p "${TRIM_PKGVAR}/config" 2>/dev/null || true
+    if [ -n "${wizard_wg_host}" ]; then
+        apply_wg_host "${wizard_wg_host}"
+    fi
+    if [ -n "${wizard_password}" ]; then
+        apply_password_hash "${wizard_password}"
+    fi
+}
+
 service_postupgrade() {
     if [ -f "$PORT_SAVE" ]; then
         apply_port "$(cat "$PORT_SAVE")"
+    fi
+    if [ -f "$WG_HOST_SAVE" ]; then
+        apply_wg_host "$(cat "$WG_HOST_SAVE")"
+    fi
+    if [ -f "$PASSWORD_HASH_SAVE" ]; then
+        apply_password_hash "$(cat "$PASSWORD_HASH_SAVE")"
     fi
 }
 

@@ -1,18 +1,15 @@
 #!/bin/bash
 # MoviePilot Docker app — wizard integration
-# docker-compose.yaml declares \`env_file: [.env]\` so .env MUST exist when
-# compose starts the container. We always write the file, with the wizard
-# values or with empty values that let the compose-side defaults take over.
+#
+# fnOS reads docker-compose.yaml through Docker API directly; it does NOT
+# invoke \`docker compose\` CLI, so \`env_file:\` and Compose-time interpolation
+# of \`${VAR:-default}\` do not work for wizard-supplied values. We sed-patch
+# the docker-compose.yaml in place for all wizard-driven values.
 
 service_postinst() {
-    local env_file="${TRIM_APPDEST}/docker/.env"
+    mkdir -p "${TRIM_PKGVAR}/config" "${TRIM_PKGVAR}/core" "${TRIM_PKGVAR}/media" "${TRIM_PKGVAR}/downloads" 2>/dev/null || true
+    chown -R "${TRIM_UID}:${TRIM_GID}" "${TRIM_PKGVAR}/config" "${TRIM_PKGVAR}/core" "${TRIM_PKGVAR}/media" "${TRIM_PKGVAR}/downloads" 2>/dev/null || true
 
-    # Always write .env (env_file directive in compose.yaml requires it).
-    # SUPERUSER_PASSWORD must be supplied here (was previously via environment:
-    # interpolation which silently lost wizard value because env_file does not
-    # feed Compose-time interpolation). Default 'password' preserves original
-    # behavior when wizard left blank.
-    : > "$env_file"
     if [ -n "${wizard_media_dir}" ]; then
         apply_media_dir "${wizard_media_dir}"
         mkdir -p "${wizard_media_dir}" 2>/dev/null || true
@@ -22,28 +19,7 @@ service_postinst() {
         mkdir -p "${wizard_download_dir}" 2>/dev/null || true
     fi
     if [ -n "${wizard_password}" ]; then
-        echo "SUPERUSER_PASSWORD=${wizard_password}" >> "$env_file"
-    else
-        echo "SUPERUSER_PASSWORD=password" >> "$env_file"
-    fi
-    chmod 600 "$env_file"
-    install_log "Wrote docker .env (wizard values applied where supplied)"
-
-    # Create default directories and fix ownership for PUID/PGID
-    mkdir -p "${TRIM_PKGVAR}/config" "${TRIM_PKGVAR}/core" "${TRIM_PKGVAR}/media" "${TRIM_PKGVAR}/downloads" 2>/dev/null || true
-    chown -R "${TRIM_UID}:${TRIM_GID}" "${TRIM_PKGVAR}/config" "${TRIM_PKGVAR}/core" "${TRIM_PKGVAR}/media" "${TRIM_PKGVAR}/downloads" 2>/dev/null || true
-}
-
-service_preupgrade() {
-    if [ -f "${TRIM_APPDEST}/docker/.env" ]; then
-        cp "${TRIM_APPDEST}/docker/.env" "${TRIM_PKGVAR}/.env.bak"
-    fi
-}
-
-service_restore() {
-    if [ -f "${TRIM_PKGVAR}/.env.bak" ]; then
-        cp "${TRIM_PKGVAR}/.env.bak" "${TRIM_APPDEST}/docker/.env"
-        rm -f "${TRIM_PKGVAR}/.env.bak"
+        apply_superuser_password "${wizard_password}"
     fi
 }
 
@@ -51,12 +27,9 @@ COMPOSE_FILE="${TRIM_APPDEST}/docker/docker-compose.yaml"
 PORT_SAVE="${TRIM_PKGVAR}/.port"
 MEDIA_DIR_SAVE="${TRIM_PKGVAR}/.media_dir"
 DOWNLOAD_DIR_SAVE="${TRIM_PKGVAR}/.download_dir"
+SUPERUSER_PASSWORD_SAVE="${TRIM_PKGVAR}/.superuser_password"
 
-# MEDIA_DIR / DOWNLOAD_DIR appear inside Compose's volumes: bindings, e.g.
-#   - ${MEDIA_DIR:-${TRIM_PKGVAR:?}/media}:/media
-# Volume substitutions are evaluated at compose parse time using shell env or
-# cwd-discovered .env — NOT the env_file directive. So we sed-patch directly,
-# mirroring ani-rss's approach for its download_dir.
+# All wizard values get sed-patched into docker-compose.yaml directly.
 apply_media_dir() {
     local dir="$1"
     [ -z "$dir" ] && return
@@ -71,6 +44,19 @@ apply_download_dir() {
     sed -i 's|^      - .*:/downloads$|      - '"${dir}"':/downloads|' "$COMPOSE_FILE"
     echo "${dir}" > "$DOWNLOAD_DIR_SAVE"
     install_log "Patched docker-compose.yaml: download_dir=${dir}"
+}
+
+apply_superuser_password() {
+    local pw="$1"
+    [ -z "$pw" ] && return
+    # Escape | for sed safety (passwords may contain it). Match the literal
+    # SUPERUSER_PASSWORD line shipped in docker-compose.yaml.
+    local escaped
+    escaped=$(printf '%s' "$pw" | sed 's:[\\&|]:\\\\&:g')
+    sed -i 's|^      - SUPERUSER_PASSWORD=.*|      - SUPERUSER_PASSWORD='"${escaped}"'|' "$COMPOSE_FILE"
+    echo "${pw}" > "$SUPERUSER_PASSWORD_SAVE"
+    chmod 600 "$SUPERUSER_PASSWORD_SAVE"
+    install_log "Patched docker-compose.yaml: SUPERUSER_PASSWORD set (length=${#pw})"
 }
 
 apply_port() {
@@ -93,22 +79,33 @@ service_postupgrade() {
     if [ -f "$MEDIA_DIR_SAVE" ]; then
         apply_media_dir "$(cat "$MEDIA_DIR_SAVE")"
     elif [ -f "$env_file" ]; then
-        local mv
-        mv="$(grep -E '^MEDIA_DIR=' "$env_file" | head -1 | cut -d= -f2-)"
-        if [ -n "$mv" ]; then
-            install_log "Migrating MEDIA_DIR from .env (legacy): $mv"
-            apply_media_dir "$mv"
+        local v
+        v="$(grep -E '^MEDIA_DIR=' "$env_file" | head -1 | cut -d= -f2-)"
+        if [ -n "$v" ]; then
+            install_log "Migrating MEDIA_DIR from .env (legacy): $v"
+            apply_media_dir "$v"
         fi
     fi
 
     if [ -f "$DOWNLOAD_DIR_SAVE" ]; then
         apply_download_dir "$(cat "$DOWNLOAD_DIR_SAVE")"
     elif [ -f "$env_file" ]; then
-        local dv
-        dv="$(grep -E '^DOWNLOAD_DIR=' "$env_file" | head -1 | cut -d= -f2-)"
-        if [ -n "$dv" ]; then
-            install_log "Migrating DOWNLOAD_DIR from .env (legacy): $dv"
-            apply_download_dir "$dv"
+        local v
+        v="$(grep -E '^DOWNLOAD_DIR=' "$env_file" | head -1 | cut -d= -f2-)"
+        if [ -n "$v" ]; then
+            install_log "Migrating DOWNLOAD_DIR from .env (legacy): $v"
+            apply_download_dir "$v"
+        fi
+    fi
+
+    if [ -f "$SUPERUSER_PASSWORD_SAVE" ]; then
+        apply_superuser_password "$(cat "$SUPERUSER_PASSWORD_SAVE")"
+    elif [ -f "$env_file" ]; then
+        local v
+        v="$(grep -E '^SUPERUSER_PASSWORD=' "$env_file" | head -1 | cut -d= -f2-)"
+        if [ -n "$v" ] && [ "$v" != "password" ]; then
+            install_log "Migrating SUPERUSER_PASSWORD from .env (legacy)"
+            apply_superuser_password "$v"
         fi
     fi
 }

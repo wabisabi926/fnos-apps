@@ -7,14 +7,12 @@ services:
     volumes:
       - ${TRIM_PKGVAR:?}/config:/config
       - ${TRIM_PKGVAR:?}/metadata:/metadata
-      - ${AUDIOBOOK_DIR:-${TRIM_PKGVAR:?}/audiobooks}:/audiobooks
-      - ${PODCAST_DIR:-${TRIM_PKGVAR:?}/podcasts}:/podcasts
-    # Explicit env_file: fnOS framework's docker compose invocation does NOT
-    # auto-discover compose-file-directory \`.env\`. Without this directive,
-    # AUDIOBOOK_DIR / PODCAST_DIR set by the wizard were silently ignored
-    # (latent bug found while fixing #146; same plumbing pattern as firefox).
-    env_file:
-      - .env
+      # AUDIOBOOK_DIR / PODCAST_DIR are literal defaults here; service_postinst
+      # sed-patches these volume lines in-place when wizard supplies custom paths.
+      # (fnOS reads docker-compose.yaml via Docker API, not \`docker compose\` CLI,
+      # so env_file and \`${VAR:-default}\` interpolation against env_file don't work.)
+      - ${TRIM_PKGVAR:?}/audiobooks:/audiobooks
+      - ${TRIM_PKGVAR:?}/podcasts:/podcasts
     environment:
       - TZ=Asia/Shanghai
     restart: unless-stopped
