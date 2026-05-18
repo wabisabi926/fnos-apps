@@ -1,0 +1,11 @@
+[
+    {
+        "stepTitle": "安装说明",
+        "items": [
+            {
+                "type": "tips",
+                "helpText": "Komari 是轻量级自托管服务器监控工具。<br><br>首次安装后，默认管理员账号密码会在容器启动日志中打印。可以通过查看容器日志获取：<br><code>docker logs komari</code><br><br>访问 http://your-nas-ip:${TRIM_SERVICE_PORT} 即可使用。<br><br>另外被监控的服务器需要安装 Komari agent，详见 <a href='https://komari-document.pages.dev/' target='_blank'>官方文档</a>。<br><br>⚠️ 镜像源说明：Komari 镜像托管在 ghcr.io，DaoCloud 公益镜像源未收录，建议使用 <code>docker.1ms.run</code> 或 <code>docker.1panel.live</code>。"
+            }
+        ]
+    }
+]

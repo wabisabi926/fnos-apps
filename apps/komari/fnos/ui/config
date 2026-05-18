@@ -1,0 +1,15 @@
+{
+    ".url": {
+        "komari.Application":
+        {
+            "title": "Komari",
+            "desc": "Komari",
+            "icon": "images/{0}.png",
+            "type": "url",
+            "port": "25774",
+            "protocol": "http",
+            "url": "/",
+            "allUsers": true
+        }
+    }
+}

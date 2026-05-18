@@ -1,0 +1,15 @@
+appname         = komari
+version         = 0.0.0
+display_name    = Komari
+platform        = x86
+maintainer      = Komari Monitor
+maintainer_url  = https://github.com/komari-monitor/komari
+distributor     = conversun
+distributor_url = https://github.com/conversun/fnos-apps
+desktop_uidir   = ui
+desktop_applaunchname = komari.Application
+service_port    = 25774
+checkport       = false
+desc            = 轻量级自托管服务器监控工具，通过 Web 界面查看服务器状态，配合轻量 agent 采集数据。
+source          = thirdparty
+checksum        = 

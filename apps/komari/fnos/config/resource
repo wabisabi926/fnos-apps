@@ -1,0 +1,25 @@
+{
+    "port-config": {
+        "protocol-file": "Komari.sc"
+    },
+    "data-share": {
+        "shares": [
+            {
+                "name": "Komari",
+                "permission": {
+                    "rw": [
+                        "komari"
+                    ]
+                }
+            }
+        ]
+    },
+    "docker-project": {
+        "projects": [
+            {
+                "name": "komari",
+                "path": "docker"
+            }
+        ]
+    }
+}

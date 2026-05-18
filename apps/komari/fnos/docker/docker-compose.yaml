@@ -1,0 +1,11 @@
+services:
+  komari:
+    image: ${DOCKER_MIRROR}ghcr.io/komari-monitor/komari:${VERSION}
+    container_name: komari
+    ports:
+      - "${TRIM_SERVICE_PORT}:25774"
+    volumes:
+      - ${TRIM_PKGVAR:?}/data:/app/data
+    environment:
+      - TZ=Asia/Shanghai
+    restart: unless-stopped
