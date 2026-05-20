@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-20T12:05:27Z",
+  "generated_at": "2026-05-20T15:35:11Z",
   "source": {
     "name": "conversun/fnos-apps",
     "url": "https://github.com/conversun/fnos-apps"
@@ -171,7 +171,7 @@
         "arm"
       ],
       "updated_at": "2026-04-20T08:39:56Z",
-      "download_count": 46,
+      "download_count": 47,
       "app_type": "docker",
       "category": "automation"
     },
@@ -360,7 +360,7 @@
         "arm"
       ],
       "updated_at": "2026-05-10T08:34:16Z",
-      "download_count": 69,
+      "download_count": 70,
       "app_type": "native",
       "category": "download"
     },
@@ -507,7 +507,7 @@
         "arm"
       ],
       "updated_at": "2026-05-13T08:57:19Z",
-      "download_count": 36,
+      "download_count": 37,
       "app_type": "native",
       "category": "network"
     },
@@ -697,7 +697,7 @@
         "arm"
       ],
       "updated_at": "2026-04-21T08:31:34Z",
-      "download_count": 44,
+      "download_count": 46,
       "app_type": "docker",
       "category": "media"
     },
@@ -970,7 +970,7 @@
         "arm"
       ],
       "updated_at": "2026-04-06T08:28:05Z",
-      "download_count": 729,
+      "download_count": 731,
       "app_type": "native",
       "category": "media"
     },
@@ -1401,10 +1401,10 @@
       "appname": "mihomo",
       "file_prefix": "mihomo",
       "display_name": "Mihomo",
-      "description": "Mihomo (Clash.Meta) 多协议代理内核，内置 MetaCubeXD 可视化面板",
+      "description": "Clash.Meta 多协议代理 + MetaCubeXD 面板 (管理:9097 代理:7890)",
       "version": "1.19.25",
-      "fpk_version": "1.19.25",
-      "release_tag": "mihomo/v1.19.25",
+      "fpk_version": "1.19.25-r1",
+      "release_tag": "mihomo/v1.19.25-r1",
       "service_port": 9097,
       "homepage_url": "https://github.com/MetaCubeX/mihomo",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/mihomo/fnos/ICON_256.PNG",
@@ -1412,7 +1412,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-20T12:05:08Z",
+      "updated_at": "2026-05-20T15:34:55Z",
       "download_count": 0,
       "app_type": "native",
       "category": "network"
@@ -2029,6 +2029,27 @@
       "category": "download"
     },
     {
+      "slug": "qinglong",
+      "appname": "qinglong",
+      "file_prefix": "qinglong",
+      "display_name": "QingLong",
+      "description": "支持 Python/JavaScript/Shell/TypeScript 的定时任务管理面板",
+      "version": "2.20.2",
+      "fpk_version": "2.20.2",
+      "release_tag": "qinglong/v2.20.2",
+      "service_port": 5700,
+      "homepage_url": "https://github.com/whyour/qinglong",
+      "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/qinglong/fnos/ICON_256.PNG",
+      "platforms": [
+        "x86",
+        "arm"
+      ],
+      "updated_at": "2026-05-20T15:34:47Z",
+      "download_count": 0,
+      "app_type": "docker",
+      "category": "system"
+    },
+    {
       "slug": "radarr",
       "appname": "radarr",
       "file_prefix": "radarr",
@@ -2339,7 +2360,7 @@
         "arm"
       ],
       "updated_at": "2026-05-14T12:57:56Z",
-      "download_count": 92,
+      "download_count": 93,
       "app_type": "native",
       "category": "download"
     },
@@ -2402,7 +2423,7 @@
         "arm"
       ],
       "updated_at": "2026-05-15T08:58:59Z",
-      "download_count": 163,
+      "download_count": 165,
       "app_type": "docker",
       "category": "media"
     },
