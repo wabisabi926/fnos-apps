@@ -6,6 +6,9 @@
 #   start                             Run cmd/main start as the package user
 #   probe                             HTTP/TCP probe per health.json
 #   stop                              Run cmd/main stop as the package user
+#   upgrade <new-fpk-path>            Overlay new fpk + run upgrade_init/callback;
+#                                     verifies a pre-upgrade data marker survives.
+#                                     Requires a previous successful 'install'.
 #   uninstall                         Run uninstall_init + uninstall_callback (with data delete)
 #   logs                              Cat LOG_FILE for the installed app
 #   assert-clean                      Assert no PID, no port, no leftover data
@@ -426,6 +429,90 @@ cmd_uninstall() {
     log "Uninstall complete"
 }
 
+cmd_upgrade() {
+    local new_fpk="${1:?upgrade requires <new-fpk-path>}"
+    [ -f "$new_fpk" ] || die "new fpk not found: $new_fpk"
+
+    load_state
+
+    local old_version="${VERSION:-unknown}"
+    log "Upgrade: starting from version=$old_version"
+
+    # Plant a persistence marker in TRIM_PKGVAR. fnOS upgrade MUST preserve user data.
+    local marker_name=".fpk-runner-upgrade-marker-$(date +%s)-$$"
+    local marker="$TRIM_PKGVAR/$marker_name"
+    echo "pre-upgrade marker (version=$old_version)" > "$marker" || die "failed to plant marker in TRIM_PKGVAR"
+    log "Planted persistence marker: $marker"
+
+    # Stage new fpk in a separate directory so we can diff and overlay deliberately.
+    local new_extract="$STATE_DIR/upgrade-new"
+    rm -rf "$new_extract"
+    mkdir -p "$new_extract"
+    log "Extracting new fpk to $new_extract"
+    tar -xzf "$new_fpk" -C "$new_extract" || die "new fpk extract failed"
+
+    local new_manifest="$new_extract/manifest"
+    [ -f "$new_manifest" ] || die "new fpk missing manifest"
+    local new_appname new_version
+    new_appname="$(manifest_value "$new_manifest" appname)"
+    new_version="$(manifest_value "$new_manifest" version)"
+    [ -n "$new_appname" ] || die "new fpk manifest.appname empty"
+    [ -n "$new_version" ] || die "new fpk manifest.version empty"
+    if [ "$new_appname" != "$TRIM_APPNAME" ]; then
+        die "new fpk appname '$new_appname' != installed appname '$TRIM_APPNAME'"
+    fi
+    log "New fpk: appname=$new_appname version=$new_version"
+
+    # fnOS sets TRIM_APP_STATUS=upgrade and runs upgrade_init BEFORE overlaying new files.
+    export TRIM_APP_STATUS=upgrade
+
+    log "Running cmd/upgrade_init (as root, matches fnOS) — daemon should stop, service_preupgrade/save fire"
+    bash "$EXTRACT_BASE/cmd/upgrade_init" || die "upgrade_init failed (exit $?)"
+
+    # Overlay new fpk contents onto the existing extraction (manifest, cmd/, config/, app.tgz).
+    # This mirrors the install-fpk binary, which replaces fpk root in place.
+    log "Overlaying new fpk root onto $EXTRACT_BASE"
+    cp -a "$new_extract/." "$EXTRACT_BASE/"
+
+    log "Extracting new app.tgz to TRIM_APPDEST=$TRIM_APPDEST (overlay, preserves data dirs)"
+    [ -f "$EXTRACT_BASE/app.tgz" ] || die "new fpk missing app.tgz"
+    tar -xzf "$EXTRACT_BASE/app.tgz" -C "$TRIM_APPDEST" || die "new app.tgz extract failed"
+
+    if [ -d "$EXTRACT_BASE/var" ]; then
+        cp -a "$EXTRACT_BASE/var" "$TRIM_APPDEST/"
+    fi
+
+    chown_app_dirs
+
+    log "Running cmd/upgrade_callback (as root, matches fnOS) — service_restore/postupgrade fire"
+    bash "$EXTRACT_BASE/cmd/upgrade_callback" || die "upgrade_callback failed (exit $?)"
+
+    chown_app_dirs
+
+    # Verify the marker we planted before upgrade is still present.
+    if [ ! -f "$marker" ]; then
+        die "persistence marker '$marker' LOST after upgrade — user data was wiped"
+    fi
+    log "Persistence marker survived upgrade ✓ (user data preserved)"
+
+    # Verify the new manifest version is now in place.
+    local installed_manifest="$EXTRACT_BASE/manifest"
+    local installed_version
+    installed_version="$(manifest_value "$installed_manifest" version)"
+    if [ "$installed_version" != "$new_version" ]; then
+        die "post-upgrade manifest.version='$installed_version' but expected '$new_version'"
+    fi
+
+    # Persist new state for subsequent start/probe/stop calls.
+    TRIM_APPVER="$new_version"
+    VERSION="$new_version"
+    export TRIM_APP_STATUS=installed
+    save_state
+
+    rm -rf "$new_extract"
+    log "Upgrade OK: $old_version → $new_version (marker survived, manifest updated)"
+}
+
 cmd_logs() {
     load_state
     local log_file="$TRIM_PKGVAR/$TRIM_APPNAME.log"
@@ -489,7 +576,7 @@ cmd_assert_clean() {
 }
 
 cmd_help() {
-    sed -n '2,32p' "$0"
+    sed -n '2,34p' "$0"
 }
 
 case "${1:-help}" in
@@ -498,6 +585,7 @@ case "${1:-help}" in
     probe)          cmd_probe ;;
     stop)           cmd_stop ;;
     uninstall)      cmd_uninstall ;;
+    upgrade)        shift; cmd_upgrade "$@" ;;
     logs)           cmd_logs ;;
     assert-clean)   cmd_assert_clean ;;
     help|--help|-h) cmd_help ;;

@@ -437,7 +437,105 @@ main_flow "$@"
 
 ---
 
-## 8. CI/CD
+## 8. 测试
+
+每个新应用在合入前必须通过三层测试。CI（`test-fpk.yml`）目前只对 WHITELIST 内的应用跑 L2/L3，新应用初次合入时**必须本地全部跑过**。
+
+### 测试矩阵
+
+| 层 | 脚本 | 覆盖范围 | 是否需要 Docker |
+|----|------|----------|-----------------|
+| **L1 静态检查** | `scripts/test/static-check.sh` | 脚手架完整性、manifest 字段、`pkill -f` 等坑 | 否 |
+| **L2 安装包契约** | `scripts/test/verify-fpk.sh` | 构建产物的结构 / 校验和 / 架构 | 否 |
+| **L3 安装 + 运行** | `scripts/test/run-fpk-tests.sh` | 真实跑 `install_init` / `cmd/main start` / HTTP/TCP 探活 / `stop` / `uninstall` / 残留检查 | 是 |
+| **L3 升级** | `scripts/test/run-fpk-tests.sh --upgrade-from <old.fpk>` | `service_*upgrade` 钩子、用户数据持久性 | 是 |
+
+### 8.1 L1：静态检查（脚手架合约验证）
+
+捕获 manifest 错填、图标缺失、未替换的 TODO 标记、端口不一致、bash 语法错误、`pkill -f` 误用（参考 issue #112）等问题。无需 Docker，~1 秒返回。
+
+```bash
+bash scripts/test/static-check.sh <app-slug>
+```
+
+**先把这一层跑干净，再做 L2/L3** —— 否则后续输出会被同样的问题刷屏。
+
+### 8.2 L2：verify-fpk 安装包契约（安装测试 · 静态侧）
+
+在不真正安装的前提下，校验**构建产物**：
+
+- `.fpk` 是合法的 tar.gz
+- 必含 `manifest`、`app.tgz`、`cmd/main`、`cmd/common`、`cmd/install_*`、`cmd/uninstall_*`、`cmd/upgrade_*`、`ICON.PNG`、`ICON_256.PNG`
+- `manifest.checksum` 等于 `md5(app.tgz)`
+- `manifest.platform` 与文件名 `_x86 / _arm` 一致
+- 原生应用的 ELF 架构对得上（x86↔x86-64 / arm↔aarch64）
+- Docker 应用的 `image:` 在 Registry 上能拉到
+
+```bash
+bash scripts/test/verify-fpk.sh dist/<slug>_<ver>_x86.fpk
+bash scripts/test/verify-fpk.sh dist/<slug>_<ver>_arm.fpk
+```
+
+### 8.3 L3：fpk-runner 安装 + 运行测试
+
+通过 `scripts/test/fpk-runner/` 里的 Docker 容器模拟 fnOS 的 `install-fpk` 二进制，真实跑一次完整生命周期：
+
+```
+install_init  →  install_callback  →  cmd/main start  →  HTTP/TCP 探活  →  cmd/main stop  →  uninstall_init  →  uninstall_callback  →  assert-clean
+```
+
+`assert-clean` 检查无残留 PID、`service_port` 端口无监听、`TRIM_PKGVAR` / `TRIM_PKGHOME` / `INST_ETC` 全部清空。
+
+```bash
+bash scripts/test/run-fpk-tests.sh dist/<slug>_<ver>_x86.fpk
+```
+
+**探活配置** 由 `apps/<slug>/fnos/health.json` 控制：`type`（`http`/`tcp`/`skip`）、`path`、`port`、`startup_timeout_seconds`、`expect_status`、`post_install_warmup_seconds`。详见 [`docs/testing/HEALTH_SCHEMA.md`](testing/HEALTH_SCHEMA.md)。
+
+首次运行会自动构建 `fnos-fpk-runner:latest` 镜像（~30 秒），后续复用。
+
+驱动 / 数据型应用（无监听端口）请把 `health.json` 的 `type` 改为 `skip`，runner 会跳过 start/probe/stop 三步。
+
+### 8.4 L3 升级：fpk-runner 升级测试
+
+升级测试在已有 L3 框架基础上引入双 `.fpk` 对照，验证 fnOS 升级生命周期里的钩子和**用户数据持久性**。runner 会在升级前在 `TRIM_PKGVAR` 写入一个 marker 文件，升级后断言它仍然存在。
+
+完整周期：
+
+```
+install OLD  →  start  →  probe  →  stop  →
+  ↳ upgrade NEW  =  upgrade_init (stop_daemon + service_preupgrade + service_save)
+                  →  overlay 新 app.tgz
+                  →  upgrade_callback (fix_data_ownership + service_restore + service_postupgrade)
+                  →  断言 marker 仍在 + manifest.version 已切换
+  →  start  →  probe  →  stop  →  uninstall  →  assert-clean
+```
+
+```bash
+bash scripts/test/run-fpk-tests.sh \
+    --upgrade-from dist/<slug>_<old-ver>_x86.fpk \
+    dist/<slug>_<new-ver>_x86.fpk
+```
+
+**应该跑升级测试的时机：**
+
+- 发布前 `manifest.version` 变更
+- 新增或修改任何 `service_preupgrade` / `service_save` / `service_restore` / `service_postupgrade` 钩子
+- `app.tgz` 内部布局变了（二进制路径、附属文件、配置模板等）
+- 升级伴随数据迁移（schema、文件结构、配置格式）
+
+首发应用（无上一个版本）跳过升级测试 —— 没有 baseline。第二个版本起，每次发布都建议跑一遍。
+
+### 8.5 CI 中的测试覆盖
+
+- `test-static.yml`：所有 PR 自动跑 L1（`static-check.sh`）。
+- `test-fpk.yml`：只对 `WHITELIST` 中的应用跑 L2 + L3。
+
+**新应用首次合入时 L1/L2/L3 都必须在本地跑过**，PR 描述里贴出输出。验证稳定后可由 maintainer 把 slug 追加到 `test-fpk.yml` 的 `WHITELIST` 来开启 CI 自动验证。
+
+---
+
+## 9. CI/CD
 
 ### 架构概览
 
@@ -486,7 +584,7 @@ main_flow "$@"
 
 ---
 
-## 9. 发布维护
+## 10. 发布维护
 
 ### 更新日志
 
@@ -509,7 +607,7 @@ main_flow "$@"
 
 ---
 
-## 10. 检查清单
+## 11. 检查清单
 
 ### 所有应用通用
 
@@ -539,9 +637,17 @@ main_flow "$@"
 - [ ] **数据持久化**: volumes 是否正确映射到 `${TRIM_PKGVAR}`？
 - [ ] **wizard**: 如需用户配置自定义路径，是否提供了安装向导？
 
+### 测试（合入前 MUST PASS）
+
+- [ ] **L1**：`bash scripts/test/static-check.sh <slug>` 全部通过
+- [ ] **L2**：`bash scripts/test/verify-fpk.sh dist/<slug>_*_x86.fpk` 全部通过（arm 同理）
+- [ ] **L3 安装/运行**：`bash scripts/test/run-fpk-tests.sh dist/<slug>_*_x86.fpk` 全部通过
+- [ ] **L3 升级**：第二个版本起，`bash scripts/test/run-fpk-tests.sh --upgrade-from dist/<old>.fpk dist/<new>.fpk` 全部通过
+- [ ] PR 描述中粘贴上述命令的输出
+
 ---
 
-## 11. 常见问题
+## 12. 常见问题
 
 ### 如何检测当前架构？
 
