@@ -1,5 +1,11 @@
 ## 2026-05-21
 
+- 移除自研面板的「节点选择」与「当前节点」展示, 这些与 MetaCubeXD 高级面板重复
+- 主面板聚焦订阅管理 / 内核状态 / 日志 (MetaCubeXD 没有的能力), 重复能力交给「高级管理」按钮
+- bump fnos-mihomo-dashboard 至 v0.1.3
+
+## 2026-05-21
+
 - 修复 metacubexd 在 /clash/ 子路径下无法连接 mihomo 后端的问题
 - dashboard 现在动态生成 /clash/config.js 让 metacubexd 自动通过 /mihomo 反代路径访问内核
 - 用户进入「高级管理」时无需手动填后端 URL, 直接可用
