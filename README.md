@@ -163,6 +163,7 @@
 | <img src="apps/tailscale/fnos/ICON.PNG" width="28"> | **Tailscale** | `8088` | Mesh VPN 客户端 | [官网](https://tailscale.com) | [Release][r-tailscale] |
 | <img src="apps/cloudflared/fnos/ICON.PNG" width="28"> | **Cloudflare Tunnel** | `14333` | Cloudflare 内网穿透隧道，通过 Web 界面管理 Tunnel Token 配置 | [GitHub](https://github.com/WisdomSky/Cloudflared-web) | [Release][r-cloudflared] |
 | <img src="apps/easytier/fnos/ICON.PNG" width="28"> | **EasyTier** | `11210` | 简单安全的去中心化异地组网方案，支持 Web 管理和子网代理 | [GitHub](https://github.com/EasyTier/EasyTier) | [Release][r-easytier] |
+| <img src="apps/mihomo/fnos/ICON.PNG" width="28"> | **Mihomo** | `9097` | Clash.Meta 内核 + MetaCubeXD dashboard，含开箱即用配置模板、TUN 模式与 LAN 混合代理 | [GitHub](https://github.com/MetaCubeX/mihomo) | [Release][r-mihomo] |
 
 ### 🌐 浏览器
 
@@ -301,6 +302,7 @@ fnos-apps/
 [r-actual]: https://github.com/conversun/fnos-apps/releases?q=actual-budget
 [r-lucky]: https://github.com/conversun/fnos-apps/releases?q=lucky
 [r-smartdns]: https://github.com/conversun/fnos-apps/releases?q=smartdns
+[r-mihomo]: https://github.com/conversun/fnos-apps/releases?q=mihomo
 [r-mosdns]: https://github.com/conversun/fnos-apps/releases?q=mosdns
 [r-tautulli]: https://github.com/conversun/fnos-apps/releases?q=tautulli
 [r-seerr]: https://github.com/conversun/fnos-apps/releases?q=seerr
