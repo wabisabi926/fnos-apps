@@ -1,5 +1,14 @@
 ## 2026-05-21
 
+- 新增 fnOS 旁路由配置覆盖功能 (基于 mihomo 实战笔记):
+  - 强制 profile.store-selected + store-fake-ip (重启保留选择)
+  - 自动启用 TLS/HTTP/QUIC Sniffer (透明代理规则匹配必需, 解决坑14)
+  - 自动剔除 tun.inet4-route-exclude-address 中的 198.18.0.0/16 (fake-ip 必须由 TUN 接管, 解决坑11)
+- dashboard 主面板新增「fnOS 旁路由优化」卡片, 列出每次保存订阅后自动应用的覆盖项
+- bump fnos-mihomo-dashboard 至 v0.1.4
+
+## 2026-05-21
+
 - 移除自研面板的「节点选择」与「当前节点」展示, 这些与 MetaCubeXD 高级面板重复
 - 主面板聚焦订阅管理 / 内核状态 / 日志 (MetaCubeXD 没有的能力), 重复能力交给「高级管理」按钮
 - bump fnos-mihomo-dashboard 至 v0.1.3
