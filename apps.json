@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-21T03:14:31Z",
+  "generated_at": "2026-05-21T03:36:19Z",
   "source": {
     "name": "conversun/fnos-apps",
     "url": "https://github.com/conversun/fnos-apps"
@@ -1403,8 +1403,8 @@
       "display_name": "Mihomo",
       "description": "Clash.Meta 多协议代理 + MetaCubeXD 面板 (管理:9097 代理:7890)",
       "version": "1.19.25",
-      "fpk_version": "1.19.25-r10",
-      "release_tag": "mihomo/v1.19.25-r10",
+      "fpk_version": "1.19.25-r11",
+      "release_tag": "mihomo/v1.19.25-r11",
       "service_port": 9097,
       "homepage_url": "https://github.com/MetaCubeX/mihomo",
       "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/mihomo/fnos/ICON_256.PNG",
@@ -1412,7 +1412,7 @@
         "x86",
         "arm"
       ],
-      "updated_at": "2026-05-21T03:14:09Z",
+      "updated_at": "2026-05-21T03:36:03Z",
       "download_count": 0,
       "app_type": "native",
       "category": "network"
