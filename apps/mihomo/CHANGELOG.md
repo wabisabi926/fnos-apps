@@ -1,5 +1,13 @@
 ## 2026-05-21
 
+- 修复 TUN `configure tun interface: operation not permitted` 错误
+  - 根因: fnOS 文件系统 (vol1/@appcenter) 不支持 file capabilities, setcap 静默失败 (之前 log 已有 WARN), mihomo 以 mihomo user 跑无 CAP_NET_ADMIN
+  - 改 config/privilege "run-as" 从 "package" 改为 "root", mihomo 直接以 root 跑获得 TUN 所需权限
+  - service-setup 的 setcap 调用仍保留 (无害, 文件系统支持时仍是更细粒度方案)
+  - trade-off: 损失少量进程隔离换可用性 (mihomo 是高质量 Go binary, root 攻击面小)
+
+## 2026-05-21
+
 - v0.3.4: UI 优化 v2 (基于实机截图反馈)
   - 顶部 logo 徽章 + 主题切换器升级为 icon segmented control (☀/🖥/🌙)
   - 状态栏从 2 列扩展为 3 列 (内核 / 连接 + 心跳脉冲 / 订阅流量摘要)
