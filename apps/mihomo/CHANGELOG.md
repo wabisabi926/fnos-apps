@@ -1,5 +1,14 @@
 ## 2026-05-21
 
+- v0.3.6: 启停开关从顶部 pill 提升为 hero 控制卡 (用户反馈"太隐蔽")
+  - 独立成区位于 header 正下方, 是页面最显眼位置
+  - 大盾牌 icon + 状态徽章 + 服务名/版本/PID/端口
+  - shadcn 风格 Switch 组件 (h-8 w-14, 圆形 thumb 平移)
+  - 卡片边框与背景在运行/停止时变色, 状态一目了然
+- bump fnos-mihomo-dashboard 至 v0.3.6
+
+## 2026-05-21
+
 - v0.3.5: 三项 UI 反馈修复
   - 轮询拆分: status/logs 5s, config/subInfo 60s, subscription URL/overrides 启动时一次, 后台流量大幅下降
   - dashboard 头部新增 mihomo 启停开关 (绿色"运行中" / 灰色"已停止"), 不再需要去 fnOS 应用中心停用
