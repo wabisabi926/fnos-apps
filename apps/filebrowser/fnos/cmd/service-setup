@@ -10,6 +10,28 @@ SERVICE_COMMAND="$APP_DIR/bin/filebrowser-server $APP_DATA_DIR"
 SVC_BACKGROUND=y
 SVC_WRITE_PID=y
 
+# ==============================================================================
+# Install hook: pre-create data dirs with correct ownership.
+# Runs as root during install BEFORE the daemon starts as user filebrowser.
+# Fixes issue #159: on fresh install, fix_data_ownership() is NOT called by
+# shared/cmd/common's install_callback, so ${TRIM_PKGVAR} may be owned by root,
+# preventing the filebrowser user from creating the bolt database.
+# ==============================================================================
+service_postinst() {
+    local data_dir="${TRIM_PKGVAR}/data"
+    local files_dir="${data_dir}/files"
+
+    # 预创建数据目录结构，确保 filebrowser 用户有写入权限
+    mkdir -p "${files_dir}"
+
+    # 转移数据目录所有权给 filebrowser 用户
+    if [ -n "${TRIM_USERNAME:-}" ] && [ -n "${TRIM_GROUPNAME:-}" ]; then
+        chown -R "${TRIM_USERNAME}:${TRIM_GROUPNAME}" "${TRIM_PKGVAR}"
+    elif id "filebrowser" >/dev/null 2>&1; then
+        chown -R filebrowser:filebrowser "${TRIM_PKGVAR}"
+    fi
+}
+
 service_preuninst() {
     # 兜底：确保 filebrowser 进程被完全终止
     pkill -x "filebrowser" 2>/dev/null || true

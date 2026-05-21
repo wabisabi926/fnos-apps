@@ -1,9 +1,25 @@
 #!/bin/sh
+set -eu
+
 APP_DIR="${TRIM_APPDEST}"
-APP_DATA_DIR=$1
-DATA_DIR="$APP_DATA_DIR/data"
+APP_DATA_DIR="$1"
+DATA_DIR="${APP_DATA_DIR}/data"
+FILES_DIR="${DATA_DIR}/files"
+DB_PATH="${DATA_DIR}/filebrowser.db"
+SERVICE_PORT="${TRIM_SERVICE_PORT:-8082}"
 
-mkdir -p "$DATA_DIR/files"
+# 诊断输出: 记录关键路径到 stderr（会被框架重定向到 LOG_FILE）
+echo "[filebrowser-server] APP_DIR=${APP_DIR}" >&2
+echo "[filebrowser-server] DATA_DIR=${DATA_DIR}" >&2
+echo "[filebrowser-server] DB_PATH=${DB_PATH}" >&2
+echo "[filebrowser-server] SERVICE_PORT=${SERVICE_PORT}" >&2
 
-cd "$APP_DIR" || exit 1
-exec ./filebrowser --address 0.0.0.0 --port "${TRIM_SERVICE_PORT}" --database "$DATA_DIR/filebrowser.db" --root "$DATA_DIR/files"
+# 预创建数据目录；失败时由 set -e 触发退出，错误信息写入 LOG_FILE
+mkdir -p "${FILES_DIR}"
+
+cd "${APP_DIR}"
+exec ./filebrowser \
+    --address 0.0.0.0 \
+    --port "${SERVICE_PORT}" \
+    --database "${DB_PATH}" \
+    --root "${FILES_DIR}"
