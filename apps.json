@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-07T07:06:06Z",
+  "generated_at": "2026-07-07T07:08:24Z",
   "source": {
     "name": "conversun/fnos-apps",
     "url": "https://github.com/conversun/fnos-apps"
@@ -760,7 +760,7 @@
         "arm"
       ],
       "updated_at": "2026-05-24T18:54:29Z",
-      "download_count": 6206,
+      "download_count": 6207,
       "app_type": "native",
       "category": "store"
     },
@@ -2255,7 +2255,7 @@
         "arm"
       ],
       "updated_at": "2026-06-19T09:29:48Z",
-      "download_count": 119,
+      "download_count": 121,
       "app_type": "docker",
       "category": "system"
     },
@@ -2784,6 +2784,27 @@
       "download_count": 138,
       "app_type": "docker",
       "category": "system"
+    },
+    {
+      "slug": "verysync",
+      "appname": "verysync",
+      "file_prefix": "verysync",
+      "display_name": "Verysync",
+      "description": "微力同步文件同步工具",
+      "version": "2.21.3",
+      "fpk_version": "2.21.3",
+      "release_tag": "verysync/v2.21.3",
+      "service_port": 8666,
+      "homepage_url": "https://www.verysync.com/",
+      "icon_url": "https://raw.githubusercontent.com/conversun/fnos-apps/main/apps/verysync/fnos/ICON_256.PNG",
+      "platforms": [
+        "x86",
+        "arm"
+      ],
+      "updated_at": "2026-07-07T07:08:06Z",
+      "download_count": 0,
+      "app_type": "native",
+      "category": "download"
     },
     {
       "slug": "vibenvr",
