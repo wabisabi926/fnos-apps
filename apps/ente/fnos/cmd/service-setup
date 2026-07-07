@@ -1,12 +1,13 @@
 #!/bin/bash
 
+COMPOSE_FILE="${TRIM_APPDEST}/docker/docker-compose.yaml"
+PORT_SAVE="${TRIM_PKGVAR}/.port"
+
 service_postinst() {
     mkdir -p "${TRIM_PKGVAR}/data" "${TRIM_PKGVAR}/db" "${TRIM_PKGVAR}/minio" 2>/dev/null || true
 }
 
-COMPOSE_FILE="${TRIM_APPDEST}/docker/docker-compose.yaml"
-PORT_SAVE="${TRIM_PKGVAR}/.port"
-
+# 端口在 fnOS 创建容器前由 ${TRIM_SERVICE_PORT} 替换；此处仅用于重配/升级时改写已存在的容器 compose。
 apply_port() {
     local port="$1"
     [ -z "$port" ] && return

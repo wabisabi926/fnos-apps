@@ -15,6 +15,16 @@ services:
       - ENTE_DB_NAME=ente
       - ENTE_DB_USER=ente
       - ENTE_DB_PASSWORD=ente
+      # S3/对象存储(MinIO) — 修复照片上传失败 (issue #164)
+      # are_local_buckets=true 时 museum 会把下方 endpoint 原样写入 presigned URL,
+      # 因此必须是客户端(手机/浏览器)可直达的 NAS 局域网 IP(不能是 localhost/容器名)。
+      # 该值由安装向导字段 wizard_s3_endpoint 提供(fnOS 在创建容器前替换, 见 issue #146)。
+      - ENTE_S3_ARE_LOCAL_BUCKETS=true
+      - ENTE_S3_B2_EU_CEN_KEY=ente
+      - ENTE_S3_B2_EU_CEN_SECRET=ente-minio-secret
+      - ENTE_S3_B2_EU_CEN_ENDPOINT=${wizard_s3_endpoint:-ente-minio}:3200
+      - ENTE_S3_B2_EU_CEN_REGION=eu-central-2
+      - ENTE_S3_B2_EU_CEN_BUCKET=b2-eu-cen
     restart: unless-stopped
 
   ente-db:
@@ -31,10 +41,20 @@ services:
   ente-minio:
     image: ${DOCKER_MIRROR}docker.io/minio/minio:latest
     container_name: ente-minio
-    command: server /data
+    command: server /data --address ":3200" --console-address ":3201"
+    ports:
+      - "3200:3200"
     volumes:
       - ${TRIM_PKGVAR:?}/minio:/data
     environment:
       - MINIO_ROOT_USER=ente
       - MINIO_ROOT_PASSWORD=ente-minio-secret
+    restart: unless-stopped
+
+  ente-minio-init:
+    image: ${DOCKER_MIRROR}docker.io/minio/mc:latest
+    container_name: ente-minio-init
+    depends_on:
+      - ente-minio
+    entrypoint: ["/bin/sh", "-c", "until mc alias set local http://ente-minio:3200 ente ente-minio-secret 2>/dev/null; do echo 'waiting for minio...'; sleep 1; done; mc ls local/b2-eu-cen >/dev/null 2>&1 || mc mb local/b2-eu-cen || exit 1; echo 'bucket b2-eu-cen ready'; tail -f /dev/null"]
     restart: unless-stopped

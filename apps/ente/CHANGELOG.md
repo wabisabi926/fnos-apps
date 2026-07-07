@@ -1,3 +1,12 @@
+## 2026-07-07
+
+- 【修复】照片备份上传失败问题 (issue #164)
+  - 根因:museum 未配置 S3/对象存储,fallback 到不可达的 localhost endpoint;MinIO 监听 :9000 且未发布、存储桶未创建
+  - docker-compose 补全 S3 配置(are_local_buckets + b2-eu-cen 桶),MinIO 改为监听 :3200 并发布端口
+  - 新增 ente-minio-init 初始化容器,首次启动自动创建 b2-eu-cen 存储桶
+  - museum endpoint 由安装向导「NAS 局域网 IP」字段直接注入 compose（fnOS 在创建容器前替换 `${wizard_s3_endpoint}`，规避 issue #146 的时序陷阱）
+  - 安装向导新增「NAS 局域网 IP」必填项与上传说明
+
 ## 2026-05-21
 
 - 【修复】Docker 镜像拉取失败问题 (issue #139)

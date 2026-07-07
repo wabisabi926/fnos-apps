@@ -13,6 +13,10 @@
             {
                 "type": "tips",
                 "helpText": "默认数据库与对象存储账号为示例值，仅用于快速启动。<br>生产环境建议修改 docker-compose 中的默认密码并启用 HTTPS。"
+            },
+            {
+                "type": "tips",
+                "helpText": "<b>📸 关于照片上传（重要）：</b><br>Ente 使用内置 MinIO 对象存储保存照片，客户端上传时会被<b>直接重定向到 MinIO 地址</b>（NAS 局域网 IP + 端口 <code>3200</code>，HTTP）。<br>因此「NAS 局域网 IP」<b>必须填写</b>本 NAS 的局域网 IP（如 <code>192.168.1.100</code>），否则手机/浏览器<b>无法上传照片</b>。<br>⚠️ 当前仅支持<b>局域网 HTTP 直传</b>；若通过 HTTPS 反向代理/域名访问 Ente，照片直传需额外配置 S3 公网 endpoint（参考 issue <a href=\"https://github.com/conversun/fnos-apps/issues/164\">#164</a>）。<br>若上传失败，通常是该 IP 不可达或端口 3200 被占用。"
             }
         ]
     }
