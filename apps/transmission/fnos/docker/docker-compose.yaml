@@ -1,6 +1,6 @@
 services:
   transmission:
-    image: ${DOCKER_MIRROR}docker.io/linuxserver/transmission:${VERSION}
+    image: ${DOCKER_MIRROR}docker.io/linuxserver/transmission:latest
     container_name: transmission
     ports:
       - "${TRIM_SERVICE_PORT}:9091"
