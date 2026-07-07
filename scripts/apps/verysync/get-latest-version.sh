@@ -1,21 +1,20 @@
 #!/bin/bash
-set -euo pipefail
+set -uo pipefail
 
 INPUT_VERSION="${1:-}"
-EFFECTIVE_URL=""
+# Verysync is closed-source; its download.php redirect is unreliable from non-CN
+# CI networks, so fall back to a known-good version when resolution fails (#117).
+PINNED_FALLBACK="2.21.3"
 
 if [ -n "$INPUT_VERSION" ]; then
   VERSION="${INPUT_VERSION#v}"
 else
-  EFFECTIVE_URL=$(curl -Ls -o /dev/null -w '%{url_effective}' "https://www.verysync.com/download.php?platform=linux-amd64")
-  VERSION=$(printf '%s\n' "$EFFECTIVE_URL" | sed -E 's|.*/verysync-linux-amd64-v([^/]+)\.tar\.gz$|\1|')
+  EFFECTIVE_URL=$(curl -Ls --max-time 20 -o /dev/null -w '%{url_effective}' "https://www.verysync.com/download.php?platform=linux-amd64" 2>/dev/null || true)
+  VERSION=$(printf '%s\n' "$EFFECTIVE_URL" | sed -nE 's|.*/verysync-linux-amd64-v([0-9][^/]*)\.tar\.gz$|\1|p')
+  [ -z "$VERSION" ] && VERSION="$PINNED_FALLBACK"
 fi
 
 [ -z "$VERSION" ] && { echo "Failed to resolve version for verysync" >&2; exit 1; }
-if [ -n "$EFFECTIVE_URL" ] && [ "$VERSION" = "$EFFECTIVE_URL" ]; then
-  echo "Unexpected Verysync download URL: $EFFECTIVE_URL" >&2
-  exit 1
-fi
 
 echo "VERSION=$VERSION"
 
