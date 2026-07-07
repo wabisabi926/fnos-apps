@@ -1,6 +1,6 @@
 services:
   next-ai-draw-io:
-    image: ghcr.io/dayuanjiang/next-ai-draw-io:${VERSION}
+    image: ghcr.io/dayuanjiang/next-ai-draw-io:latest
     container_name: next-ai-draw-io
     ports:
       - "${TRIM_SERVICE_PORT}:3000"
